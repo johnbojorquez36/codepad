@@ -1,0 +1,53 @@
+<!doctype html>
+
+<html>
+<head>
+	<title>codepad</title>
+	<link rel="stylesheet" type="text/css" href="css/codepad.css" />
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+	<div class="container-fluid">
+
+		<!-- HEADER -->
+		<div class="row codepad_header">
+			codepad <br />
+		</div>
+		
+		<!-- CODEPAD CREATE/JOIN FORM -->
+		<form class="form-horizontal" style="margin-top:100px">
+
+			<!-- CODE GROUP FORM -->
+			<div class="row form-group">
+				<label for="code_group" class="col-sm-5 control-label">code group:</label>
+				<div class="col-sm-2">
+					<input type="text" class="form-control" id="code_group" placeholder="Ex. mock41" onkeyup="checkInput()">
+					<small class="text-muted">Create or join a codepad group</small>
+				</div>
+				<div class="col-sm-5"> </div>
+			</div>
+			
+			<!-- CODENAME FORM -->
+			<div class="row form-group">
+				<label for="code_name" class="col-sm-5 control-label">code name:</label>
+				<div class="col-sm-2">
+					<input type="text" class="form-control" id="code_name" placeholder="Ex. codeGod23" onkeyup="checkInput()">
+				</div>
+				<div class="col-sm-5"> </div>
+			</div>
+		</form>
+
+	</div>
+
+	<!-- CREATE/JOIN BUTTON -->
+	<div class="row centered">
+		<button href="pad.html" id="join_button" type="button" class="btn btn-primary btn-l" disabled>Create / Join</button>
+	</div>
+
+</div>
+
+<script type="text/javascript" src="js/codepad.js"></script>
+</body>
+</html>

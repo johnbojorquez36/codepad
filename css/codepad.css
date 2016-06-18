@@ -1,0 +1,19 @@
+.codepad_header {
+	background-color: #474e5d;
+	color: #ffffff;
+	font-size: 4em;
+	text-align: center;
+	padding: 20px 0px 20px 0px;
+}
+
+.centered {
+	text-align: center;
+}
+
+#editor {
+	margin-top: 10px;
+	margin-left: 16px;
+	margin-right: 16px;
+}
+
+
