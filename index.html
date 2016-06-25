@@ -9,6 +9,7 @@
 </head>
 
 <body>
+
 	<div class="container-fluid">
 
 		<!-- HEADER -->
@@ -16,38 +17,86 @@
 			codepad <br />
 		</div>
 		
-		<!-- CODEPAD CREATE/JOIN FORM -->
-		<form class="form-horizontal" style="margin-top:100px">
+		<div id="codeform">
+			<!-- CODEPAD CREATE/JOIN FORM -->
+			<form class="form-horizontal" style="margin-top:100px">
 
-			<!-- CODE GROUP FORM -->
-			<div class="row form-group">
-				<label for="code_group" class="col-sm-5 control-label">code group:</label>
-				<div class="col-sm-2">
-					<input type="text" class="form-control" id="code_group" placeholder="Ex. mock41" onkeyup="checkInput()">
-					<small class="text-muted">Create or join a codepad group</small>
+				<!-- CODE GROUP FORM -->
+				<div class="row form-group">
+					<label for="code_group" class="col-sm-5 control-label">code group:</label>
+					<div class="col-sm-2">
+						<input type="text" class="form-control" id="code_group" placeholder="Ex. mock41" onkeyup="checkInput()">
+						<small class="text-muted">Create or join a codepad group</small>
+					</div>
+					<div class="col-sm-5"> </div>
 				</div>
-				<div class="col-sm-5"> </div>
-			</div>
-			
-			<!-- CODENAME FORM -->
-			<div class="row form-group">
-				<label for="code_name" class="col-sm-5 control-label">code name:</label>
-				<div class="col-sm-2">
-					<input type="text" class="form-control" id="code_name" placeholder="Ex. codeGod23" onkeyup="checkInput()">
+
+				<!-- CODENAME FORM -->
+				<div class="row form-group">
+					<label for="code_name" class="col-sm-5 control-label">code name:</label>
+					<div class="col-sm-2">
+						<input type="text" class="form-control" id="code_name" placeholder="Ex. codeGod23" onkeyup="checkInput()">
+					</div>
+					<div class="col-sm-5"> </div>
 				</div>
-				<div class="col-sm-5"> </div>
+			</form>
+
+			<!-- CREATE/JOIN BUTTON -->
+			<div class="row centered">
+				<button href="pad.html" id="join_button" type="button" class="btn btn-primary btn-l" disabled>Create / Join</button>
 			</div>
-		</form>
+
+			<br />
+
+			<!-- SERVER INFO -->
+			<div class="row centered" id="server_info">
+				codegroups online: 0
+			</div>
+		</div>
+
+		<!-- CODEPAD AREA -->
+		<div class="row" id="codepad" style="display: none">
+			<div class="col-xs-8">
+				<div class="row">
+					<div class="col-xs-2">
+						<select class="form-control" onchange="codepad.setLanguage(this.value)">
+							<option>C/C++</option>
+							<option>Java</option>
+							<option>Scheme</option>
+							<option>Python</option>
+							<option>JavaScript</option>
+						</select>
+					</div>
+
+					<div class="col-xs-2">
+						<select class="form-control" onchange="codepad.setStyle(this.value)">
+							<option>Emacs</option>
+							<option>Vim</option>
+						</select>
+					</div>
+
+					<div class="col-xs-6"> 
+					</div>
+
+					<div class="col-xs-2">
+						<input class="btn btn-primary pull-right" type="button" value="Reset" onclick="codepad.clear()">
+					</div>
+				</div>
+				<div class="row">
+					<div id="editor" style="height: 700px"></div>
+				</div>
+			</div>
+
+			<div class="col-xs-4">
+
+			</div>
+		</div>
 
 	</div>
 
-	<!-- CREATE/JOIN BUTTON -->
-	<div class="row centered">
-		<button href="pad.html" id="join_button" type="button" class="btn btn-primary btn-l" disabled>Create / Join</button>
-	</div>
-
-</div>
-
+<script src="js/ace-min/ace.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="js/codestream.js"></script>
 <script type="text/javascript" src="js/codepad.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>
