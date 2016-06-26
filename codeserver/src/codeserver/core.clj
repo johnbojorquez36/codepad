@@ -73,7 +73,7 @@
             (if (and (= (count group-map) 1) (not (nil? (group-map codename))))
               (do (println (str "Closing the group " codegroup))
                   (swap! code-groups dissoc codegroup))
-              (swap! group-map dissoc codename))
+              (swap! ((deref code-groups) codegroup) dissoc codename))
             (swap! channel-map dissoc channel))))))
 
 (defn handle-event
