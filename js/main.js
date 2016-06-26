@@ -28,6 +28,11 @@ function loadCodepad() {
 	} else {
 		alert("No connection with server. No coding today :(");
 	}
+
+	if (infoUpdate != null) {
+		clearInterval(infoUpdate);
+		infoUpdate = null;
+	}
 }
 
 function getGroupInfo() {
@@ -40,10 +45,9 @@ function getGroupInfo() {
 	}
 
 	if (code_group_field.value != "") {
-		console.log("setting group info interval");
 		infoUpdate = setInterval(function() {
 			codestream.requestGroupInfo(code_group_field.value);
-		}, 2000);
+		}, 500);
 	}
 }
 
