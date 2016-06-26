@@ -44,5 +44,3 @@ var Codepad = function(lang, style) {
 		return this.editor;
 	}
 }
-
-var codepad = new Codepad("c_cpp", "emacs");

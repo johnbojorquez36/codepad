@@ -32,12 +32,21 @@ var Codestream = function(address) {
             console.log("Received heartbeat from server.")
             self.missed_heartbeats = 0;
             self.streaming = true;
+            document.getElementById("server_info").innerHTML =
+            "codegroups online: " + codemessage.data.num_groups;
             break;
          case "user_joined":
             var codename = codemessage.data.codename;
             var codegroup = codemessage.data.codegroup;
             console.log(codename + " has joined the group " + codegroup);
             break;
+         case "code_delta":
+            var delta = JSON.parse(codemessage.data.delta);
+            codepad.getEditor().getSession().getDocument().applyDeltas([delta]);
+         case "group_info":
+            var num_coders = codemessage.num_coders;
+            document.getElementById("codegroup_info").innerHTML = 
+            "<span class=\"glyphicon glyphicon-check\" style=\"padding-top:12px;color:green\" ></span> coders: " + num_coders;
       }
    }
 
@@ -75,6 +84,25 @@ var Codestream = function(address) {
             codegroup: codegroup
          }
       }));
+   }
+
+   self.requestGroupInfo = function(codegroup) {
+      self.ws.send(JSON.stringify({
+         event: "group_info",
+         codegroup: codegroup
+      }));
+   }
+
+   self.notifyDelta = function(delta) {
+      console.log(delta);
+      self.ws.send(JSON.stringify({
+         event: "code_delta",
+         data: {
+            codename: codename,
+            codegroup: codegroup,
+            delta: "ff"
+         }
+      }))
    }
 
    self.isStreaming = function() {

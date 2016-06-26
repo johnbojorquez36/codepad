@@ -11,11 +11,17 @@
                                          :data {:codename codename
                                                 :codegroup codegroup}})))
 
+(defn notify-delta
+  [codename delta channel]
+  (server/send! channel (json/write-str {:event "code_delta"
+                                         :data {:codename codename
+                                                :delta delta}})))
 (defn notify-group
-  [group notify]
-  (if (not (empty? group))
-    (do (notify (second (first group)))
-        (notify-group (rest group) notify))))
+  [codegroup notify]
+  (loop [group (deref ((deref code-groups) codegroup))]
+    (if (not (empty? group))
+      (do (notify (second (first group)))
+          (recur (rest group))))))
 
 (defn add-to-group
   [codename channel codegroup]
@@ -29,12 +35,29 @@
   (let [codename (data "codename")
         codegroup (data "codegroup")]
     (do (add-to-group codename channel codegroup)
-        (let [group (deref ((deref code-groups) codegroup))]
-          (notify-group group #(notify-join codename codegroup %1))))))
+        (notify-group codegroup #(notify-join codename codegroup %1)))))
 
 (defn send-heartbeat
   [channel]
-  (server/send! channel (json/write-str {:event "heartbeat"})))
+  (server/send! channel (json/write-str {:event "heartbeat"
+                                         :data {:num_groups (count (deref code-groups))}})))
+
+(defn handle-code-delta
+  [data]
+  (println data)
+  (let [codename (data "codename")
+        codegroup (data "codegroup")
+        delta (data "delta")]
+    (notify-group codegroup #(notify-delta codename delta %))))
+
+(defn handle-group-info
+  [codegroup channel]
+  (let [group-atm ((deref code-groups) codegroup)]
+    (server/send! channel (json/write-str {:event "group_info"
+                                           :num_coders
+                                           (if (nil? group-atm)
+                                             0
+                                             (count (deref group-atm)))}))))
 
 (defn handle-event
   "Receives an event as a JSON string and dispatches the matching function."
@@ -44,6 +67,8 @@
         event-type (event-obj "event")]
     (cond (= event-type "join_group") (join-group (event-obj "data") channel)
           (= event-type "heartbeat") (send-heartbeat channel)
+          (= event-type "code_delta") (handle-code-delta (event-obj "data"))
+          (= event-type "group_info") (handle-group-info (event-obj "codegroup") channel)
           :else (println "unknown event"))))
 
 (defn ws-handler [request]
