@@ -3,6 +3,7 @@
             [clojure.data.json :as json]))
 
 (def code-groups (atom {}))
+(def channel-map (atom {}))
 
 (defn notify-join
   "Notifies a channel that a user has joined the same group"
@@ -34,7 +35,8 @@
   [data channel]
   (let [codename (data "codename")
         codegroup (data "codegroup")]
-    (do (add-to-group codename channel codegroup)
+    (do (swap! channel-map assoc channel [codename codegroup])
+        (add-to-group codename channel codegroup)
         (notify-group codegroup #(notify-join codename codegroup %1)))))
 
 (defn send-heartbeat
@@ -59,6 +61,21 @@
                                              0
                                              (count (deref group-atm)))}))))
 
+(defn handle-close
+  [status channel]
+  (let [user-info ((deref channel-map) channel)]
+    (if (nil? user-info)
+      (println "Anonymous user left.")
+      (let [codename (first user-info)
+            codegroup (second user-info)
+            group-map (deref ((deref code-groups) codegroup))]
+        (do (println (str codename " left the group " codegroup))
+            (if (and (= (count group-map) 1) (not (nil? (group-map codename))))
+              (do (println (str "Closing the group " codegroup))
+                  (swap! code-groups dissoc codegroup))
+              (swap! group-map dissoc codename))
+            (swap! channel-map dissoc channel))))))
+
 (defn handle-event
   "Receives an event as a JSON string and dispatches the matching function."
   [event channel]
@@ -73,7 +90,7 @@
 
 (defn ws-handler [request]
   (server/with-channel request channel
-    (server/on-close channel (fn [status] (println "channel closed: " status)))
+    (server/on-close channel #(handle-close %1 channel))
     (server/on-receive channel #(handle-event %1 channel))))
 
 
