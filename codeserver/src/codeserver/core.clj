@@ -65,7 +65,7 @@
   [status channel]
   (let [user-info ((deref channel-map) channel)]
     (if (nil? user-info)
-      (println "Anonymous user left.")
+      (println "\nAnonymous user left.")
       (let [codename (first user-info)
             codegroup (second user-info)
             group-map (deref ((deref code-groups) codegroup))]
@@ -77,9 +77,8 @@
             (swap! channel-map dissoc channel))))))
 
 (defn handle-event
-  "Receives an event as a JSON string and dispatches the matching function."
+  "Receives an event as a JSON string and sends to the corresponding handler."
   [event channel]
-  ;;(println event)
   (let [event-obj (json/read-str event)
         event-type (event-obj "event")]
     (cond (= event-type "join_group") (join-group (event-obj "data") channel)
@@ -88,13 +87,39 @@
           (= event-type "group_info") (handle-group-info (event-obj "codegroup") channel)
           :else (println "unknown event"))))
 
-(defn ws-handler [request]
+(defn ws-handler
+  "Handles websocket communication of open channels with clients."
+  [request]
   (server/with-channel request channel
     (server/on-close channel #(handle-close %1 channel))
     (server/on-receive channel #(handle-event %1 channel))))
 
+(defn print-groups
+  []
+  (defn print-group
+    [group]
+    (print (str (first group) ": "))
+    (loop [coders (deref (second group))]
+      (if (not (empty? coders))
+        (do (print (str (first (first coders)) ", "))
+            (recur (rest coders)))))
+    (println))
+  (loop [groups (deref code-groups)]
+    (if (not (empty? groups))
+      (do (print-group (first groups))
+          (recur (rest groups))))))
+
+(defn run-codepad-repl
+  []
+  (print "admin@codepad.com:~$ ")
+  (flush)
+  (let [ln (read-line)]
+    (cond (= ln "groups") (print-groups))
+    (cond (= ln "q") (System/exit 0)))
+  (run-codepad-repl))
+
 
 (defn -main
-  "This should be pretty simple."
   []
+  (.start (Thread. run-codepad-repl))
   (server/run-server ws-handler {:port 8081}))
