@@ -7,6 +7,7 @@ var Codestream = function(address) {
    self.address = address;
    self.streaming = false;
    self.missed_heartbeats = 0;
+   self.appliedDeltas = false;
 
    self.onbeforeunload = function() {
       self.ws.onclose = function () {};
@@ -22,6 +23,7 @@ var Codestream = function(address) {
       document.getElementById("codepad").style.display = "none";
       document.getElementById("server_info").innerHTML =
        "codeserver unavailable. try again later.";
+       document.getElementById("codegroup_info").innerHTML = "";
       document.getElementById("join_button").disabled = true;
    }
 
@@ -41,7 +43,8 @@ var Codestream = function(address) {
             console.log(codename + " has joined the group " + codegroup);
             break;
          case "code_delta":
-            var delta = JSON.parse(codemessage.data.delta);
+            var delta = codemessage.data.delta;
+            self.appliedDeltas = true;
             codepad.getEditor().getSession().getDocument().applyDeltas([delta]);
          case "group_info":
             var num_coders = codemessage.num_coders;
@@ -94,15 +97,18 @@ var Codestream = function(address) {
    }
 
    self.notifyDelta = function(delta) {
-      console.log(delta);
-      self.ws.send(JSON.stringify({
-         event: "code_delta",
-         data: {
-            codename: codename,
-            codegroup: codegroup,
-            delta: "ff"
-         }
-      }))
+      if (!self.appliedDeltas) {
+         self.ws.send(JSON.stringify({
+            event: "code_delta",
+            data: {
+               codename: codename,
+               codegroup: codegroup,
+               delta: delta
+            }
+         }))
+      } else {
+         self.appliedDeltas = false;
+      }
    }
 
    self.isStreaming = function() {

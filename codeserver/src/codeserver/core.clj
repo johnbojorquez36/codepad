@@ -14,9 +14,11 @@
 
 (defn notify-delta
   [codename delta channel]
-  (server/send! channel (json/write-str {:event "code_delta"
+  (if (not (= (first ((deref channel-map) channel)) codename))
+    (do (println codename " " ((deref channel-map) channel))
+    (server/send! channel (json/write-str {:event "code_delta"
                                          :data {:codename codename
-                                                :delta delta}})))
+                                                :delta delta}})))))
 (defn notify-group
   [codegroup notify]
   (loop [group (deref ((deref code-groups) codegroup))]
@@ -69,7 +71,7 @@
       (let [codename (first user-info)
             codegroup (second user-info)
             group-map (deref ((deref code-groups) codegroup))]
-        (do (println (str codename " left the group " codegroup))
+        (do (println (str "\n" codename " left the group " codegroup))
             (if (and (= (count group-map) 1) (not (nil? (group-map codename))))
               (do (println (str "Closing the group " codegroup))
                   (swap! code-groups dissoc codegroup))

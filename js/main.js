@@ -6,7 +6,7 @@ var codename;
 var codegroup;
 var infoUpdate = null;
 
-codepad.getEditor().on("change", function(e) {codestream.notifyDelta(e.data);});
+codepad.getEditor().on("change", function(e) {codestream.notifyDelta(e);});
 
 function checkInput() {
 	document.getElementById("join_button").disabled = 
