@@ -13,6 +13,7 @@
                                                 :codegroup codegroup}})))
 
 (defn notify-delta
+  "Notifies a channel of a user's code delta"
   [codename delta channel]
   (if (not (= (first ((deref channel-map) channel)) codename))
     (do (println codename " " ((deref channel-map) channel))
@@ -20,6 +21,7 @@
                                          :data {:codename codename
                                                 :delta delta}})))))
 (defn notify-group
+  "Applies a notification function to each channel in the group"
   [codegroup notify]
   (loop [group (deref ((deref code-groups) codegroup))]
     (if (not (empty? group))
@@ -32,7 +34,13 @@
           (swap! ((deref code-groups) codegroup) assoc codename channel)
           (swap! code-groups assoc codegroup (atom {codename channel}))))
 
-(defn join-group
+(defn send-heartbeat
+  [channel]
+  (server/send! channel (json/write-str {:event "heartbeat"
+                                         :data {:num_groups
+                                                (count (deref code-groups))}})))
+
+(defn handle-join-group
   "Either joins a user with an existing group or creates a new one."
   [data channel]
   (let [codename (data "codename")
@@ -40,11 +48,6 @@
     (do (swap! channel-map assoc channel [codename codegroup])
         (add-to-group codename channel codegroup)
         (notify-group codegroup #(notify-join codename codegroup %1)))))
-
-(defn send-heartbeat
-  [channel]
-  (server/send! channel (json/write-str {:event "heartbeat"
-                                         :data {:num_groups (count (deref code-groups))}})))
 
 (defn handle-code-delta
   [data]
@@ -54,14 +57,14 @@
         delta (data "delta")]
     (notify-group codegroup #(notify-delta codename delta %))))
 
-(defn handle-group-info
-  [codegroup channel]
-  (let [group-atm ((deref code-groups) codegroup)]
+(defn handle-group-info-request
+  [data channel]
+  (let [codegroup (data "codegroup")
+        num_coders (if (nil? ((deref code-groups) codegroup))
+                     0
+                     (count (deref group-atm)))]
     (server/send! channel (json/write-str {:event "group_info"
-                                           :num_coders
-                                           (if (nil? group-atm)
-                                             0
-                                             (count (deref group-atm)))}))))
+                                           :num_coders num_coders}))))
 
 (defn handle-close
   [status channel]
@@ -82,12 +85,13 @@
   "Receives an event as a JSON string and sends to the corresponding handler."
   [event channel]
   (let [event-obj (json/read-str event)
-        event-type (event-obj "event")]
-    (cond (= event-type "join_group") (join-group (event-obj "data") channel)
+        event-type (event-obj "event")
+        event-data (event-obj "data")]
+    (cond (= event-type "join_group") (handle-join-group event-data channel)
           (= event-type "heartbeat") (send-heartbeat channel)
-          (= event-type "code_delta") (handle-code-delta (event-obj "data"))
-          (= event-type "group_info") (handle-group-info (event-obj "codegroup") channel)
-          :else (println "unknown event"))))
+          (= event-type "code_delta") (handle-code-delta event-data)
+          (= event-type "group_info") (handle-group-info event-data channel)
+          :else (println "unknown event received"))))
 
 (defn ws-handler
   "Handles websocket communication of open channels with clients."
@@ -116,8 +120,9 @@
   (print "admin@codepad.com:~$ ")
   (flush)
   (let [ln (read-line)]
-    (cond (= ln "groups") (print-groups))
-    (cond (= ln "q") (System/exit 0)))
+    (cond (= ln "groups") (print-groups)
+          (= ln "q") (System/exit 0)
+          :else (println "command not recognized")))
   (run-codepad-repl))
 
 
