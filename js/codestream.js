@@ -38,18 +38,34 @@ var Codestream = function(address) {
             "codegroups online: " + codemessage.data.num_groups;
             break;
          case "user_joined":
+            alert("joined")
             var codename = codemessage.data.codename;
             var codegroup = codemessage.data.codegroup;
-            console.log(codename + " has joined the group " + codegroup);
+            var div = document.getElementById("coderlist");
+            div.innerHTML = div.innerHTML + codename + "<br />";
             break;
          case "code_delta":
             var delta = codemessage.data.delta;
             self.appliedDeltas = true;
             codepad.getEditor().getSession().getDocument().applyDeltas([delta]);
+            break;
          case "group_info":
             var num_coders = codemessage.num_coders;
             document.getElementById("codegroup_info").innerHTML = 
             "<span class=\"glyphicon glyphicon-check\" style=\"padding-top:12px;color:green\" ></span> coders: " + num_coders;
+            break;
+         case "join_group_response":
+            if (codemessage.data.error == "codename_taken") {
+               alert("codename is taken sorrz");
+            } else {
+               var coders = codemessage.data.users;
+               console.log("CODERS:");
+               console.log(msg);
+               var div = document.getElementById("coderlist");
+               for (var i = 0; i < coders.length; ++i) {
+                  div.innerHTML = div.innerHTML + coders[i] + "<br />";
+               }
+            }
       }
    }
 
@@ -92,7 +108,9 @@ var Codestream = function(address) {
    self.requestGroupInfo = function(codegroup) {
       self.ws.send(JSON.stringify({
          event: "group_info",
-         codegroup: codegroup
+         data: {
+            codegroup: codegroup
+         }
       }));
    }
 

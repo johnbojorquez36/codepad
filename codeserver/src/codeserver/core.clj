@@ -11,6 +11,14 @@
   (server/send! channel (json/write-str {:event "user_joined"
                                          :data {:codename codename
                                                 :codegroup codegroup}})))
+(defn get-codenames
+  [codegroup]
+  (defn get-names-helper
+    [group]
+    (if (empty? group)
+      '()
+      (cons (first (first group)) (get-names-helper (rest group)))))
+  (get-names-helper (deref ((deref code-groups) codegroup))))
 
 (defn notify-delta
   "Notifies a channel of a user's code delta"
@@ -44,10 +52,17 @@
   "Either joins a user with an existing group or creates a new one."
   [data channel]
   (let [codename (data "codename")
-        codegroup (data "codegroup")]
-    (do (swap! channel-map assoc channel [codename codegroup])
-        (add-to-group codename channel codegroup)
-        (notify-group codegroup #(notify-join codename codegroup %1)))))
+        codegroup (data "codegroup")
+        group-atom ((deref code-groups) codegroup)]
+    (if (and group-atom ((deref group-atom) codename))
+      (server/send! channel (json/write-str {:event "join_group_response"
+                                             :data {:status "codename_taken"}}))
+      (do (swap! channel-map assoc channel [codename codegroup])
+          (add-to-group codename channel codegroup)
+          (notify-group codegroup #(notify-join codename codegroup %1))
+          (server/send! channel (json/write-str {:event "join_group_response"
+                                                 :data {:status "ok"
+                                                        :users (get-codenames codegroup)}}))))))
 
 (defn handle-code-delta
   [data]
@@ -62,7 +77,7 @@
   (let [codegroup (data "codegroup")
         num_coders (if (nil? ((deref code-groups) codegroup))
                      0
-                     (count (deref group-atm)))]
+                     (count (deref ((deref code-groups) codegroup))))]
     (server/send! channel (json/write-str {:event "group_info"
                                            :num_coders num_coders}))))
 
@@ -90,7 +105,7 @@
     (cond (= event-type "join_group") (handle-join-group event-data channel)
           (= event-type "heartbeat") (send-heartbeat channel)
           (= event-type "code_delta") (handle-code-delta event-data)
-          (= event-type "group_info") (handle-group-info event-data channel)
+          (= event-type "group_info") (handle-group-info-request event-data channel)
           :else (println "unknown event received"))))
 
 (defn ws-handler

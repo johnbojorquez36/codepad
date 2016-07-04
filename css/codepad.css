@@ -16,4 +16,11 @@
 	margin-right: 16px;
 }
 
+#coderlist {
+	height: 600px;
+	padding-top:10px;
+	background-color: #9b9b96;
+    overflow-y: scroll; 
+}
+
 
