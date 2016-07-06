@@ -25,13 +25,14 @@
 				<div class="row form-group">
 					<label for="code_group" class="col-sm-5 control-label">code group:</label>
 					<div class="col-sm-2">
-						<input type="text" class="form-control" id="code_group" placeholder="Ex. mock41" oninput="checkInput();getGroupInfo()">
+						<input type="text" class="form-control" id="code_group" placeholder="Ex. mock41" oninput="Codeform.validateInput();getGroupInfo()">
 						<small class="text-muted">Create or join a codepad group</small>
 					</div>
 					<div class="col-sm-1">
 
-						<span id="codegroup_info" style="padding-top:6px">
-							
+						<span id="codegroup_info" style="padding-top:6px;display:none">
+							<span class="glyphicon glyphicon-check" style="padding-top:12px;color:green" ></span> 
+							coders: <span id="num_coders">0</span>
 						</span>
 					</div>
 					<div class="col-sm-4"> </div>
@@ -41,9 +42,16 @@
 				<div class="row form-group">
 					<label for="code_name" class="col-sm-5 control-label">code name:</label>
 					<div class="col-sm-2">
-						<input type="text" class="form-control" id="code_name" placeholder="Ex. codeGod23" oninput="checkInput()">
+						<input type="text" class="form-control" id="code_name" placeholder="Ex. codeGod23" oninput="Codeform.validateInput()">
 					</div>
-					<div class="col-sm-5"> </div>
+					<div class="col-sm-1">
+
+						<span id="codename_error" style="padding-top:6px;display:none">
+							<span class="glyphicon glyphicon-remove" style="padding-top:12px;color:red" ></span> 
+							<span id="codename_error_msg"></span>
+						</span>
+					</div>
+					<div class="col-sm-4"> </div>
 				</div>
 			</form>
 
@@ -113,6 +121,8 @@
 	</div>
 
 <script src="js/ace-min/ace.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="js/codeform.js"></script>
+<script type="text/javascript" src="js/codeworld.js"></script>
 <script type="text/javascript" src="js/codestream.js"></script>
 <script type="text/javascript" src="js/codepad.js"></script>
 <script type="text/javascript" src="js/main.js"></script>

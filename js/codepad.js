@@ -43,4 +43,4 @@ var Codepad = function(lang, style) {
 	Codepad.prototype.getEditor = function() {
 		return this.editor;
 	}
-}
+};

@@ -1,102 +1,61 @@
+/** GLOBALS **/
 var heartbeat_msg = JSON.stringify({event: "heartbeat"});
 
 var Codestream = function(address) {
    var self = this;
 
-   /********* PROPERTIES **********/
-   self.address = address;
-   self.streaming = false;
-   self.missed_heartbeats = 0;
-   self.appliedDeltas = false;
+   /********* PRIVATE MEMBER VARIABLES **********/
 
-   self.onbeforeunload = function() {
-      self.ws.onclose = function () {};
-      self.ws.close()
-   }
-   
-   self.onopen = function () {
-      self.startStreaming();
-   }
-
-   self.onerror = function(evt) {
-      document.getElementById("codeform").style.display = "inline";
-      document.getElementById("codepad").style.display = "none";
-      document.getElementById("server_info").innerHTML =
-       "codeserver unavailable. try again later.";
-       document.getElementById("codegroup_info").innerHTML = "";
-      document.getElementById("join_button").disabled = true;
-   }
-
-   self.onmessage = function (msg) {
+   var ws;
+   var address = address;
+   var streaming = false;
+   var missed_heartbeats = 0;
+   var callbacks = new Map();
+   var onbeforeunload = this.disconnect; 
+   var onopen = startStreaming;
+   var onerror = this.disconnect;
+   var onmessage = function (msg) {
       var codemessage = JSON.parse(msg.data);
-      switch(codemessage.event) {
-         case "heartbeat":
-            console.log("Received heartbeat from server.")
-            self.missed_heartbeats = 0;
-            self.streaming = true;
-            document.getElementById("server_info").innerHTML =
-            "codegroups online: " + codemessage.data.num_groups;
-            break;
-         case "user_joined":
-            alert("joined")
-            var codename = codemessage.data.codename;
-            var codegroup = codemessage.data.codegroup;
-            var div = document.getElementById("coderlist");
-            div.innerHTML = div.innerHTML + codename + "<br />";
-            break;
-         case "code_delta":
-            var delta = codemessage.data.delta;
-            self.appliedDeltas = true;
-            codepad.getEditor().getSession().getDocument().applyDeltas([delta]);
-            break;
-         case "group_info":
-            var num_coders = codemessage.num_coders;
-            document.getElementById("codegroup_info").innerHTML = 
-            "<span class=\"glyphicon glyphicon-check\" style=\"padding-top:12px;color:green\" ></span> coders: " + num_coders;
-            break;
-         case "join_group_response":
-            if (codemessage.data.error == "codename_taken") {
-               alert("codename is taken sorrz");
-            } else {
-               var coders = codemessage.data.users;
-               console.log("CODERS:");
-               console.log(msg);
-               var div = document.getElementById("coderlist");
-               for (var i = 0; i < coders.length; ++i) {
-                  div.innerHTML = div.innerHTML + coders[i] + "<br />";
-               }
-            }
+
+      if (codemessage.event == "heartbeat") {
+         missed_heartbeats = 0;
+         streaming = true;
       }
+
+      callbacks.get(codemessage.event)(codemessage.data);
+   };
+
+   /********* PUBLIC MEMBER VARIABLES *********/
+
+   this.appliedDeltas = false;
+
+   /********* PUBLIC METHODS *********/
+
+
+   Codestream.prototype.onevent = function(event_type, callback) {
+      callbacks.set(event_type, callback);
    }
 
-   self.connect = function() {
-      self.ws = new WebSocket(address);
-      self.ws.onbeforeunload = self.onbeforeunload;
-      self.ws.onopen = self.onopen;
-      self.ws.onerror = self.onerror;
-      self.ws.onmessage =  self.onmessage;
+   Codestream.prototype.connect = function() {
+      ws = new WebSocket(address);
+      ws.onbeforeunload = onbeforeunload;
+      ws.onopen = onopen;
+      ws.onerror = onerror;
+      ws.onmessage = onmessage;
    }
 
-   self.startStreaming = function() {
-      heartbeat = setInterval(function() {
-         try {
-            self.missed_heartbeats++;
-            if (self.missed_heartbeats >= 5) {
-               self.streaming = false;
-               self.connect();
-            }
-            self.ws.send(heartbeat_msg);
-         } catch(e) {
-            clearInterval(heartbeat);
-            heartbeat = null;
-            console.warn("Closing connection. Reason: " + e.message);
-            self.ws.close();
-       }
-    }, 1000);
+   Codestream.prototype.disconnect = function() {
+      ws.onclose = function() {};
+      ws.close();
    }
 
-   self.requestToJoinGroup = function(codename, codegroup) {
-      self.ws.send(JSON.stringify({
+   Codestream.prototype.setErrorCallback = function(error_func) {
+      onerror = error_func;
+      ws.onerror = error_func;
+   }
+
+   Codestream.prototype.requestToJoinGroup = function(codename, codegroup) {
+      ws.send(JSON.stringify({
          event: "join_group",
          data: {
             codename: codename,
@@ -105,8 +64,8 @@ var Codestream = function(address) {
       }));
    }
 
-   self.requestGroupInfo = function(codegroup) {
-      self.ws.send(JSON.stringify({
+   Codestream.prototype.requestGroupInfo = function(codegroup) {
+      ws.send(JSON.stringify({
          event: "group_info",
          data: {
             codegroup: codegroup
@@ -114,22 +73,42 @@ var Codestream = function(address) {
       }));
    }
 
-   self.notifyDelta = function(delta) {
-      if (!self.appliedDeltas) {
-         self.ws.send(JSON.stringify({
+   Codestream.prototype.notifyDelta = function(delta) {
+      if (!this.appliedDeltas) {
+         ws.send(JSON.stringify({
             event: "code_delta",
             data: {
-               codename: codename,
-               codegroup: codegroup,
+               codename: codeworld.getCodename(),
+               codegroup: codeworld.getCodegroupName(),
                delta: delta
             }
          }))
       } else {
-         self.appliedDeltas = false;
+         this.appliedDeltas = false;
       }
    }
 
-   self.isStreaming = function() {
-      return self.streaming;
+   Codestream.prototype.isStreaming = function() {
+      return streaming;
    }
-}
+
+   /********* PRIVATE METHODS *********/
+
+   function startStreaming() {
+      heartbeat = setInterval(function() {
+         try {
+            missed_heartbeats++;
+            if (missed_heartbeats >= 5) {
+               streaming = false;
+               self.connect();
+            }
+            ws.send(heartbeat_msg);
+         } catch(e) {
+            clearInterval(heartbeat);
+            heartbeat = null;
+            console.warn("Closing connection. Reason: " + e.message);
+            ws.close();
+       }
+    }, 1000);
+   }
+};
