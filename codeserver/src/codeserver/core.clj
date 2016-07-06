@@ -8,9 +8,19 @@
 (defn notify-join
   "Notifies a channel that a user has joined the same group"
   [codename codegroup channel]
-  (server/send! channel (json/write-str {:event "user_joined"
+  (if (not (= codename (first ((deref channel-map) channel))))
+      (server/send! channel (json/write-str {:event "user_joined"
                                          :data {:codename codename
-                                                :codegroup codegroup}})))
+                                                :codegroup codegroup}}))))
+
+(defn notify-leave
+  "Notifies a channel that a user has left the same group"
+  [codename codegroup channel]
+  (if (not (= codename (first ((deref channel-map) channel))))
+      (server/send! channel (json/write-str {:event "user_left"
+                                         :data {:codename codename
+                                                :codegroup codegroup}}))))
+
 (defn get-codenames
   [codegroup]
   (defn get-names-helper
@@ -18,29 +28,28 @@
     (if (empty? group)
       '()
       (cons (first (first group)) (get-names-helper (rest group)))))
-  (get-names-helper (deref ((deref code-groups) codegroup))))
+  (get-names-helper (deref (first ((deref code-groups) codegroup)))))
 
 (defn notify-delta
   "Notifies a channel of a user's code delta"
   [codename delta channel]
   (if (not (= (first ((deref channel-map) channel)) codename))
-    (do (println codename " " ((deref channel-map) channel))
     (server/send! channel (json/write-str {:event "code_delta"
                                          :data {:codename codename
-                                                :delta delta}})))))
+                                                :delta delta}}))))
 (defn notify-group
   "Applies a notification function to each channel in the group"
   [codegroup notify]
-  (loop [group (deref ((deref code-groups) codegroup))]
+  (loop [group (deref (first ((deref code-groups) codegroup)))]
     (if (not (empty? group))
       (do (notify (second (first group)))
           (recur (rest group))))))
 
 (defn add-to-group
   [codename channel codegroup]
-  (if ((deref code-groups) codegroup)
-          (swap! ((deref code-groups) codegroup) assoc codename channel)
-          (swap! code-groups assoc codegroup (atom {codename channel}))))
+  (if (first ((deref code-groups) codegroup))
+          (swap! (first ((deref code-groups) codegroup)) assoc codename channel)
+          (swap! code-groups assoc codegroup [(atom {codename channel}) (atom [])])))
 
 (defn send-heartbeat
   [channel]
@@ -53,7 +62,7 @@
   [data channel]
   (let [codename (data "codename")
         codegroup (data "codegroup")
-        group-atom ((deref code-groups) codegroup)]
+        group-atom (first ((deref code-groups) codegroup))]
     (if (and group-atom ((deref group-atom) codename))
       (server/send! channel (json/write-str {:event "join_group_response"
                                              :data {:status "codename_taken"}}))
@@ -62,38 +71,37 @@
           (notify-group codegroup #(notify-join codename codegroup %1))
           (server/send! channel (json/write-str {:event "join_group_response"
                                                  :data {:status "ok"
-                                                        :users (get-codenames codegroup)}}))))))
+                                                        :users (get-codenames codegroup)
+                                                        :deltas (deref (second ((deref code-groups) codegroup)))}}))))))
 
 (defn handle-code-delta
   [data]
-  (println data)
   (let [codename (data "codename")
         codegroup (data "codegroup")
         delta (data "delta")]
-    (notify-group codegroup #(notify-delta codename delta %))))
+    (do (swap! (second ((deref code-groups) codegroup)) conj delta)
+        (notify-group codegroup #(notify-delta codename delta %)))))
 
 (defn handle-group-info-request
   [data channel]
   (let [codegroup (data "codegroup")
-        num_coders (if (nil? ((deref code-groups) codegroup))
+        num_coders (if (nil? (first ((deref code-groups) codegroup)))
                      0
-                     (count (deref ((deref code-groups) codegroup))))]
+                     (count (deref (first ((deref code-groups) codegroup)))))]
     (server/send! channel (json/write-str {:event "group_info"
-                                           :num_coders num_coders}))))
+                                           :data {:num_coders num_coders}}))))
 
 (defn handle-close
   [status channel]
   (let [user-info ((deref channel-map) channel)]
-    (if (nil? user-info)
-      (println "\nAnonymous user left.")
+    (if (not (nil? user-info))
       (let [codename (first user-info)
             codegroup (second user-info)
-            group-map (deref ((deref code-groups) codegroup))]
-        (do (println (str "\n" codename " left the group " codegroup))
-            (if (and (= (count group-map) 1) (not (nil? (group-map codename))))
-              (do (println (str "Closing the group " codegroup))
-                  (swap! code-groups dissoc codegroup))
-              (swap! ((deref code-groups) codegroup) dissoc codename))
+            group-map (deref (first ((deref code-groups) codegroup)))]
+        (do (if (and (= (count group-map) 1) (not (nil? (group-map codename))))
+              (swap! code-groups dissoc codegroup)
+              (do (notify-group codegroup #(notify-leave codename codegroup %1))
+                  (swap! (first ((deref code-groups) codegroup)) dissoc codename)))
             (swap! channel-map dissoc channel))))))
 
 (defn handle-event
@@ -120,11 +128,11 @@
   (defn print-group
     [group]
     (print (str (first group) ": "))
-    (loop [coders (deref (second group))]
+    (loop [coders (deref (first (second group)))]
       (if (not (empty? coders))
         (do (print (str (first (first coders)) ", "))
             (recur (rest coders)))))
-    (println))
+    (println "\b\b "))
   (loop [groups (deref code-groups)]
     (if (not (empty? groups))
       (do (print-group (first groups))
@@ -136,6 +144,7 @@
   (flush)
   (let [ln (read-line)]
     (cond (= ln "groups") (print-groups)
+          (= ln "numusers") (println (count (deref channel-map)))
           (= ln "q") (System/exit 0)
           :else (println "command not recognized")))
   (run-codepad-repl))

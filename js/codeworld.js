@@ -41,6 +41,13 @@ var Codeworld = function() {
     	codepad.getEditor().getSession().getDocument().applyDeltas([data.delta]);
 	};
 
+	Codeworld.prototype.applyDeltas = function(deltas) {
+    	for (var i = 0; i < deltas.length; ++i) {
+    		codestream.appliedDeltas = true;
+    		codepad.getEditor().getSession().getDocument().applyDeltas([deltas[i]]);
+    	}
+	};
+
 	Codeworld.prototype.setCodename = function(name) {
 		codename = name; 
 	};

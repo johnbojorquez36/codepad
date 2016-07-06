@@ -41,7 +41,6 @@ codestream.onevent("group_info", Codeform.updateGroupInfo);
 codestream.onevent("join_group_response", handleJoinGroupResponse);
 
 function handleJoinGroupResponse(data) {
-	console.log(JSON.stringify(data));
 	if (data.status == "codename_taken") {
 		Codeform.displayCodenameError("codename taken");
 		Codeform.disableSubmit();
@@ -49,6 +48,7 @@ function handleJoinGroupResponse(data) {
 		Codeform.hide();
 		codeworld.setCodename(Codeform.getCodename());
 		codeworld.setCodegroupName(Codeform.getCodegroupName());
+		codeworld.applyDeltas(data.deltas);
 		codeworld.show();
 		codeworld.addCoders(data.users);
 
