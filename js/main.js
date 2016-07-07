@@ -66,6 +66,12 @@ document.getElementById("join_button").onclick = function() {
 		codestream.requestToJoinGroup(codename, codegroup);
 };
 
+function htmlEncodeString(raw) {
+	return raw.replace(/[\u00A0-\u9999<>\&]/gim, function(str) {
+		return '&#' + str.charCodeAt(0) + ';';
+	});
+}
+
 
 
 

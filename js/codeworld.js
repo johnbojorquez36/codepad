@@ -52,6 +52,26 @@ var Codeworld = function() {
     	}
 	};
 
+	Codeworld.prototype.sendComposedMessage = function() {
+		var message = htmlEncodeString(document.getElementById("message_composition").value);
+		document.getElementById("message_composition").value = "";
+
+		if (message != "") {
+
+			var chat_box = document.getElementById("chat_box");
+			chat_box.innerHTML = chat_box.innerHTML +
+			"<b style=\"color:green\">" + codename +  "</b>: " + message + "<br />";
+		}
+	}
+
+	Codeworld.prototype.handleChatKeyPress = function(e) {
+		if (e.keyCode == 13) {
+			this.sendComposedMessage();
+			return false;
+		}
+		return true;
+	}
+
 	Codeworld.prototype.setCodename = function(name) {
 		codename = name; 
 	};

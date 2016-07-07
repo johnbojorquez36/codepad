@@ -13,11 +13,11 @@ var Codeform = Codeform || {
 	},
 
 	getCodegroupName: function() {
-		return document.getElementById("code_group").value;
+		return htmlEncodeString(document.getElementById("code_group").value);
 	},
 
 	getCodename: function() {
-		return document.getElementById("code_name").value;
+		return htmlEncodeString(document.getElementById("code_name").value);
 	},
 
 	hide: function() {
