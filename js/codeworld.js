@@ -62,7 +62,17 @@ var Codeworld = function() {
 			chat_box.innerHTML = chat_box.innerHTML +
 			"<b style=\"color:green\">" + codename +  "</b>: " + message + "<br />";
 		}
-	}
+
+		codestream.sendMessageToGroup(message);
+	};
+
+	Codeworld.prototype.receiveChatMessage = function(data) {
+		var sender = data.codename
+		var message = data.message;
+		var chat_box = document.getElementById("chat_box");
+		chat_box.innerHTML = chat_box.innerHTML +
+		"<b>" + sender +  "</b>: " + message + "<br />";
+	};
 
 	Codeworld.prototype.handleChatKeyPress = function(e) {
 		if (e.keyCode == 13) {
@@ -70,7 +80,7 @@ var Codeworld = function() {
 			return false;
 		}
 		return true;
-	}
+	};
 
 	Codeworld.prototype.setCodename = function(name) {
 		codename = name; 

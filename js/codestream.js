@@ -21,7 +21,7 @@ var Codestream = function(address) {
          missed_heartbeats = 0;
          streaming = true;
       }
-
+      
       callbacks.get(codemessage.event)(codemessage.data);
    };
 
@@ -73,6 +73,17 @@ var Codestream = function(address) {
       }));
    }
 
+   Codestream.prototype.sendMessageToGroup = function(message) {
+      ws.send(JSON.stringify({
+            event: "chat_message",
+            data: {
+               codename: codeworld.getCodename(),
+               codegroup: codeworld.getCodegroupName(),
+               message: message
+            }
+      }));
+   }
+
    Codestream.prototype.notifyDelta = function(delta) {
       if (!this.appliedDeltas) {
          ws.send(JSON.stringify({
@@ -82,7 +93,7 @@ var Codestream = function(address) {
                codegroup: codeworld.getCodegroupName(),
                delta: delta
             }
-         }))
+         }));
       } else {
          this.appliedDeltas = false;
       }

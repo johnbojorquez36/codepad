@@ -39,6 +39,7 @@ codestream.onevent("user_left", codeworld.removeCoder);
 codestream.onevent("code_delta", codeworld.applyCodeDelta);
 codestream.onevent("group_info", Codeform.updateGroupInfo);
 codestream.onevent("join_group_response", handleJoinGroupResponse);
+codestream.onevent("chat_message", codeworld.receiveChatMessage);
 
 function handleJoinGroupResponse(data) {
 	if (data.status == "codename_taken") {

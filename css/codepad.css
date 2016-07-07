@@ -1,6 +1,7 @@
 .codepad_header {
 	background-color: #474e5d;
 	color: #ffffff;
+	font-family: Monaco, Consolas, "Lucida Console", monospace;
 	font-size: 4em;
 	text-align: center;
 	padding: 20px 0px 20px 0px;
@@ -23,8 +24,10 @@
     overflow-y: scroll; 
 }
 
-#codechat {
+#chat_box {
 	height: 600px;
+	overflow-y: scroll;
+	word-wrap: break-word;
 }
 
 #send_button {

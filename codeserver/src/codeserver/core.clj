@@ -37,6 +37,14 @@
     (server/send! channel (json/write-str {:event "code_delta"
                                          :data {:codename codename
                                                 :delta delta}}))))
+
+(defn notify-chat-message
+  "Notifies a channel of a user's chat message"
+  [codename message channel]
+  (if (not (= (first ((deref channel-map) channel)) codename))
+    (server/send! channel (json/write-str {:event "chat_message"
+                                         :data {:codename codename
+                                                :message message}}))))
 (defn notify-group
   "Applies a notification function to each channel in the group"
   [codegroup notify]
@@ -91,6 +99,13 @@
     (server/send! channel (json/write-str {:event "group_info"
                                            :data {:num_coders num_coders}}))))
 
+(defn handle-chat-message
+  [data channel]
+  (let [codename (data "codename")
+        codegroup (data "codegroup")
+        message (data "message")]
+    (notify-group codegroup #(notify-chat-message codename message %))))
+
 (defn handle-close
   [status channel]
   (let [user-info ((deref channel-map) channel)]
@@ -114,6 +129,7 @@
           (= event-type "heartbeat") (send-heartbeat channel)
           (= event-type "code_delta") (handle-code-delta event-data)
           (= event-type "group_info") (handle-group-info-request event-data channel)
+          (= event-type "chat_message") (handle-chat-message event-data channel)
           :else (println "unknown event received"))))
 
 (defn ws-handler
