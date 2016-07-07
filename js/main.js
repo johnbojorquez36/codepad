@@ -50,6 +50,7 @@ function handleJoinGroupResponse(data) {
 		codeworld.setCodegroupName(Codeform.getCodegroupName());
 		codeworld.applyDeltas(data.deltas);
 		codeworld.show();
+		codeworld.displayCodegroupName();
 		codeworld.addCoders(data.users);
 
 		if (infoUpdate != null) {

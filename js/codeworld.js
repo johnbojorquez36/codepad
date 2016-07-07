@@ -28,6 +28,10 @@ var Codeworld = function() {
     	});
 	};
 
+	Codeworld.prototype.displayCodegroupName = function() {
+		document.getElementById("codegroup_header").innerHTML = codegroup_name;
+	}
+
 	Codeworld.prototype.addCoders = function(coders) {
 		var list = document.getElementById("coderlist");
 		for (var i = 0; i < coders.length; ++i) {
