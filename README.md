@@ -2,7 +2,6 @@
 A simple online tool for conducting programming interviews.
 
 ## TODO:
----
 * Add functionality to send messages through server
 * Highlight codename when coder is coding
 * Add "<user> is typing..." when typing a message
