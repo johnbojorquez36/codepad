@@ -23,4 +23,49 @@
     overflow-y: scroll; 
 }
 
+#codechat {
+	height: 600px;
+}
+
+#send_button {
+	font-size: 0.8vw;
+	margin-left: 5px;
+	background-color: #0099ff;
+	border-radius: 4px;
+	height:54px;
+	box-shadow: 0 2px 6px 1px grey
+}
+
+#send_button:hover {
+	background-color: #004d80;
+	cursor:pointer;
+}
+
+.row.no-gutter {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.row.no-gutter [class*='col-']:not(:first-child),
+.row.no-gutter [class*='col-']:not(:last-child) {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.unselectable { 
+	-webkit-user-select: none; 
+	-khtml-user-select: none; 
+	-moz-user-select: none; 
+	-o-user-select: none; 
+	user-select: none; 
+}
+
+@media only screen and (max-width: 900px) {
+
+   #send_button {
+   		display: none;
+   }
+
+}
+
 
