@@ -84,6 +84,14 @@ div.chat_update {
    #send_text {
    		display: none;
    }
+
+   	#chat_box {
+		height:40vh;
+	}
+
+	#editor {
+		height: 50vh;
+	}
 }
 
 @media only screen and (max-width: 768px) {
@@ -95,6 +103,14 @@ div.chat_update {
    #send_text {
    		display: inline;
    }
+
+   	#chat_box {
+		height:20vh;
+	}
+
+	#editor {
+		height: 35vh;
+	}
 }
 
 
