@@ -21,12 +21,12 @@
 #coderlist {
 	height: 67vh;
 	padding-right: 4px;
-    overflow-y: scroll; 
+    overflow-y: auto; 
 }
 
 #chat_box {
 	height:60vh;
-	overflow-y: scroll;
+	overflow-y: auto;
 	word-wrap: break-word;
 }
 
@@ -71,7 +71,7 @@ div.chat_update {
 
 .sub-tagline {
 	text-align: center;
-  	font-size: 3.5em;
+  	font-size: 3em;
   	text-shadow: #000 0px 2px 4px;
 }
 
