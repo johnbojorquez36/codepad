@@ -1,4 +1,5 @@
 var Codeworld = function() {
+	var that = this;
 	var codename;
 	var codegroup_name;
 	var codegroup = new Set();
@@ -13,10 +14,17 @@ var Codeworld = function() {
 		document.getElementById("codepad").style.display = "none";
 	}
 
+	Codeworld.prototype.updateChat = function(msg) {
+		var chat_box = document.getElementById("chat_box");
+		chat_box.innerHTML = chat_box.innerHTML +
+		"<div class=\"chat_update\">" + msg + "</div>";
+	};
+
 	Codeworld.prototype.addCoder = function(data) {
     	var list = document.getElementById("coderlist");
     	codegroup.add(data.codename);
     	list.innerHTML = list.innerHTML + data.codename + "<br />";
+    	that.updateChat(data.codename + " joined.");
 	};
 
 	Codeworld.prototype.removeCoder = function(data) {
@@ -26,6 +34,7 @@ var Codeworld = function() {
     	codegroup.forEach(function (codename) {
     		list.innerHTML = list.innerHTML + codename + "<br />";
     	});
+    	that.updateChat(data.codename + " left.");
 	};
 
 	Codeworld.prototype.displayCodegroupName = function() {
@@ -76,7 +85,7 @@ var Codeworld = function() {
 
 	Codeworld.prototype.handleChatKeyPress = function(e) {
 		if (e.keyCode == 13) {
-			this.sendComposedMessage();
+			that.sendComposedMessage();
 			return false;
 		}
 		return true;

@@ -44,6 +44,12 @@
 	cursor:pointer;
 }
 
+div.chat_update {
+	font-size:0.9em;
+	text-align: center;
+	color:grey;
+}
+
 .row.no-gutter {
   margin-left: 0;
   margin-right: 0;
