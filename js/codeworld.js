@@ -3,6 +3,7 @@ var Codeworld = function() {
 	var codename;
 	var codegroup_name;
 	var codegroup = new Set();
+	var activeTimers = new Map();
 	var codestream;
 	var codepad;
 
@@ -24,7 +25,7 @@ var Codeworld = function() {
     	var list = document.getElementById("coderlist");
     	codegroup.add(data.codename);
     	list.innerHTML = list.innerHTML + 
-    	"<div class=\"well well-sm\">" + data.codename + "</div>";
+    	"<div id=\"" + data.codename + "\" class=\"well well-sm\">" + data.codename + "</div>";
     	that.updateChat(data.codename + " joined.");
 	};
 
@@ -33,7 +34,8 @@ var Codeworld = function() {
     	var list = document.getElementById("coderlist");
     	list.innerHTML = "";
     	codegroup.forEach(function (codename) {
-    		list.innerHTML = list.innerHTML + codename + "<br />";
+    		list.innerHTML = list.innerHTML +
+    		"<div id=\"" + codename + "\" class=\"well well-sm\">" + data.codename + "</div>";
     	});
     	that.updateChat(data.codename + " left.");
 	};
@@ -47,13 +49,25 @@ var Codeworld = function() {
 		for (var i = 0; i < coders.length; ++i) {
 			codegroup.add(coders[i]);
 			list.innerHTML = list.innerHTML + 
-    		"<div class=\"well well-sm\">" + coders[i] + "</div>";
+    		"<div id=\"" + coders[i] + "\" class=\"well well-sm\">" + coders[i] + "</div>";
 		}
 	};
 
 	Codeworld.prototype.applyCodeDelta = function(data) {
     	codestream.appliedDeltas = true;
     	codepad.getEditor().getSession().getDocument().applyDeltas([data.delta]);
+
+    	var currentTimer = activeTimers.get(data.codename);
+    	if (currentTimer !=  null) {
+    		clearTimeout(currentTimer);
+    	} else {
+    		document.getElementById(data.codename).style.backgroundColor = "#80e5ff";
+    	}
+
+    	activeTimers.set(data.codename, setTimeout(function() {
+    		document.getElementById(data.codename).style.backgroundColor = "";
+    		activeTimers.delete(data.codename);
+    	}, 1000));
 	};
 
 	Codeworld.prototype.applyDeltas = function(deltas) {
