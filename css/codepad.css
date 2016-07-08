@@ -12,20 +12,20 @@
 }
 
 #editor {
+	height: 70vh;
 	margin-top: 10px;
 	margin-left: 16px;
 	margin-right: 16px;
 }
 
 #coderlist {
-	height: 600px;
-	padding-top:10px;
-	background-color: #9b9b96;
+	height: 67vh;
+	padding-right: 4px;
     overflow-y: scroll; 
 }
 
 #chat_box {
-	height: 600px;
+	height:60vh;
 	overflow-y: scroll;
 	word-wrap: break-word;
 }
@@ -75,12 +75,26 @@ div.chat_update {
   	text-shadow: #000 0px 2px 4px;
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 992px) {
 
-   #send_button {
-   		display: none;
+	#send_button {
+   		font-size: 1.5vw;
    }
 
+   #send_text {
+   		display: none;
+   }
+}
+
+@media only screen and (max-width: 768px) {
+
+	#send_button {
+   		font-size: 2vw;
+   }
+
+   #send_text {
+   		display: inline;
+   }
 }
 
 

@@ -23,7 +23,8 @@ var Codeworld = function() {
 	Codeworld.prototype.addCoder = function(data) {
     	var list = document.getElementById("coderlist");
     	codegroup.add(data.codename);
-    	list.innerHTML = list.innerHTML + data.codename + "<br />";
+    	list.innerHTML = list.innerHTML + 
+    	"<div class=\"well well-sm\">" + data.codename + "</div>";
     	that.updateChat(data.codename + " joined.");
 	};
 
@@ -45,7 +46,8 @@ var Codeworld = function() {
 		var list = document.getElementById("coderlist");
 		for (var i = 0; i < coders.length; ++i) {
 			codegroup.add(coders[i]);
-			list.innerHTML = list.innerHTML + coders[i] + "<br />";
+			list.innerHTML = list.innerHTML + 
+    		"<div class=\"well well-sm\">" + coders[i] + "</div>";
 		}
 	};
 

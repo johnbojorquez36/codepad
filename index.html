@@ -70,14 +70,22 @@
 
 		<!-- CODEPAD -->
 		<div id="codepad" style="display: none">
-			<h2 class="row sub-tagline" id="codegroup_header">
-				
-			</h2>
-			<br />
 
+			<!-- CODEGROUP HEADER -->
 			<div class="row">
-				<div class="col-xs-6">
+				<h2 class="row sub-tagline" id="codegroup_header"></h2>
+			</div>
+
+			<!-- CODEPAD/CODECHAT AREA -->
+			<div class="row" id="codepadarea">
+
+				<!-- CODEPAD COLUMN -->
+				<div class="col-md-6 col-sm-8">
+
+					<!-- CODEPAD OPTIONS ROW -->
 					<div class="row">
+
+						<!-- LANGUAGE DROPDOWN -->
 						<div class="col-xs-2">
 							<select class="form-control" onchange="codepad.setLanguage(this.value)">
 								<option>C/C++</option>
@@ -88,6 +96,7 @@
 							</select>
 						</div>
 
+						<!-- EDITOR STYLE DROPDOWN -->
 						<div class="col-xs-2">
 							<select class="form-control" onchange="codepad.setStyle(this.value)">
 								<option>Emacs</option>
@@ -98,37 +107,41 @@
 						<div class="col-xs-6"> 
 						</div>
 
+						<!-- RESET CODEPAD -->
 						<div class="col-xs-2">
 							<input class="btn btn-primary pull-right" type="button" value="Reset" onclick="codepad.clear()">
 						</div>
 					</div>
+
+					<!-- CODEPAD EDITOR -->
 					<div class="row">
-						<div id="editor" style="height: 700px"></div>
+						<div id="editor"></div>
 					</div>
 				</div>
 
-				<div class="col-xs-2 centered" style="padding-top: 0px;">
-					<h2 style="padding-top:10px">coders</h2>
-					<div id="coderlist">
-						
-					</div>
-				</div>
-				<div class="col-xs-4">
-				<div id="codechat" class="panel panel-primary">
-					<div class="panel-heading centered">codechat</div>
-					<div class="panel-body" id="chat_box">
-					</div>
-				</div>
-				<div class="row no-gutter">
-					<div class="col-xs-11">
-					<textarea class="form-control" rows="2" id="message_composition" style="resize:none" onkeydown="return codeworld.handleChatKeyPress(event)" placeholder="Write a message..."></textarea>
-					</div>
-					<div class="col-xs-1">
-						<div id="send_button" class="centered unselectable" onclick="codeworld.sendComposedMessage()">
-							<span class="glyphicon glyphicon-send" style="padding-top:8px"></span> <br />
-							<b>Send</b>
+				<div class="col-md-4 col-md-push-2 col-sm-4" style="padding-top: 10px">
+					<div id="codechat" class="panel panel-primary">
+						<div class="panel-heading centered">codechat</div>
+						<div class="panel-body" id="chat_box">
 						</div>
 					</div>
+					<div class="row no-gutter">
+						<div class="col-xs-11">
+							<textarea class="form-control" rows="2" id="message_composition" style="resize:none" onkeydown="return codeworld.handleChatKeyPress(event)" placeholder="Write a message..."></textarea>
+						</div>
+						<div class="col-xs-1">
+							<div id="send_button" class="centered unselectable" onclick="codeworld.sendComposedMessage()">
+								<span class="glyphicon glyphicon-send" style="padding-top:8px"></span> <br />
+								<b id="send_text">Send</b>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-2 col-md-pull-4 col-sm-12 centered" style="padding-top: 0px;">
+					<h2>coders</h2>
+					<div id="coderlist">
+						
 					</div>
 				</div>
 			</div>
