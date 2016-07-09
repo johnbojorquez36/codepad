@@ -46,10 +46,35 @@ var Codeform = Codeform || {
 		document.getElementById("codename_error_msg").innerHTML = msg;
 	},
 
+	displayCodegroupError: function(msg) {
+		document.getElementById("codegroup_error").style.display = "inline";
+		document.getElementById("codegroup_error_msg").innerHTML = msg;
+	},
+
+	checkCodegroupNameLength: function() {
+		return document.getElementById("code_group").value.length <= 22;
+	},
+
+	checkCodenameLength: function() {
+		return document.getElementById("code_name").value.length <= 26;
+	},
+
 	validateInput: function() {
+		if (!Codeform.checkCodegroupNameLength()) {
+			Codeform.displayCodegroupError("too long.");
+		} else {
+			document.getElementById("codegroup_error").style.display = "none";
+		}
+		if (!Codeform.checkCodenameLength()) {
+			Codeform.displayCodenameError("too long.");
+		} else {
+			document.getElementById("codename_error").style.display = "none";
+		}
 		document.getElementById("join_button").disabled = 
-		document.getElementById("code_group").value == "" 
-		|| document.getElementById("code_name").value == ""
-		|| !codestream.isStreaming();
+			document.getElementById("code_group").value == "" 
+			|| !Codeform.checkCodegroupNameLength()
+			|| !Codeform.checkCodenameLength()
+			|| document.getElementById("code_name").value == ""
+			|| !codestream.isStreaming();
 	}	
 };

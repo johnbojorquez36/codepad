@@ -20,7 +20,7 @@ function getGroupInfo() {
 			infoUpdate = null;
 		}
 
-		if (code_group_field.value != "") {
+		if (code_group_field.value != "" && Codeform.checkCodegroupNameLength()) {
 			infoUpdate = setInterval(function() {
 				codestream.requestGroupInfo(code_group_field.value);
 			}, 500);

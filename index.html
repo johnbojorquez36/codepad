@@ -34,6 +34,11 @@
 							<span class="glyphicon glyphicon-check" style="padding-top:12px;color:green" ></span> 
 							coders: <span id="num_coders">0</span>
 						</span>
+
+						<span id="codegroup_error" style="padding-top:6px;display:none">
+							<span class="glyphicon glyphicon-remove" style="padding-top:12px;color:red" ></span> 
+							<span id="codegroup_error_msg"></span>
+						</span>
 					</div>
 					<div class="col-sm-4"> </div>
 				</div>
@@ -126,13 +131,13 @@
 						</div>
 					</div>
 					<div class="row no-gutter">
-						<div class="col-xs-11">
+						<div class="col-md-11 col-sm-10 col-xs-11">
 							<textarea class="form-control" rows="2" id="message_composition" style="resize:none" onkeydown="return codeworld.handleChatKeyPress(event)" placeholder="Write a message..."></textarea>
 						</div>
-						<div class="col-xs-1">
+						<div class="col-md-1 col-sm-2 col-xs-1">
 							<div id="send_button" class="centered unselectable" onclick="codeworld.sendComposedMessage()">
 								<span class="glyphicon glyphicon-send" style="padding-top:8px"></span> <br />
-								<b id="send_text">Send</b>
+								<b>Send</b>
 							</div>
 						</div>
 					</div>
