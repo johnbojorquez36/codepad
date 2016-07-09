@@ -69,13 +69,14 @@ var Codeworld = function() {
     		document.getElementById(data.codename).style.backgroundColor = "#80e5ff";
     	}
 
-    	markerMap.set(data.codename, codepad.getEditor().session.addMarker(new Range(delta.start.row, 0, delta.end.row, 1), "myMarker", "fullLine"));
+    	var row = delta.end.row;
+    	markerMap.set(data.codename, codepad.getEditor().session.addMarker(new Range(row, 0, row, 1), "myMarker", "fullLine"));
 
     	activeTimers.set(data.codename, setTimeout(function() {
     		document.getElementById(data.codename).style.backgroundColor = "";
     		activeTimers.delete(data.codename);
     		codepad.getEditor().session.removeMarker(markerMap.get(data.codename));
-    	}, 1000));
+    	}, 500));
 	};
 
 	Codeworld.prototype.applyDeltas = function(deltas) {
