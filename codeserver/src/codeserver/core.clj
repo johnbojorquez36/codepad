@@ -45,6 +45,14 @@
     (server/send! channel (json/write-str {:event "chat_message"
                                          :data {:codename codename
                                                 :message message}}))))
+
+(defn notify-typing-status
+  "Notifies a channel of a user's typing status"
+  [codename status channel]
+  (if (not (= (first ((deref channel-map) channel)) codename))
+    (server/send! channel (json/write-str {:event "typing_status"
+                                         :data {:codename codename
+                                                :status status}}))))
 (defn notify-group
   "Applies a notification function to each channel in the group"
   [codegroup notify]
@@ -119,6 +127,13 @@
                   (swap! (first ((deref code-groups) codegroup)) dissoc codename)))
             (swap! channel-map dissoc channel))))))
 
+(defn handle-typing-status
+  [data channel]
+  (let [codename (data "codename")
+        codegroup (data "codegroup")
+        status (data "status")]
+    (notify-group codegroup #(notify-typing-status codename status %))))
+
 (defn handle-event
   "Receives an event as a JSON string and sends to the corresponding handler."
   [event channel]
@@ -130,6 +145,7 @@
           (= event-type "code_delta") (handle-code-delta event-data)
           (= event-type "group_info") (handle-group-info-request event-data channel)
           (= event-type "chat_message") (handle-chat-message event-data channel)
+          (= event-type "typing_status") (handle-typing-status event-data channel)
           :else (println "unknown event received"))))
 
 (defn ws-handler

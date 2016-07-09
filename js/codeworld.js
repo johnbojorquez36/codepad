@@ -5,6 +5,7 @@ var Codeworld = function() {
 	var codegroup = new Set();
 	var activeTimers = new Map();
 	var markerMap = new Map();
+	var typingTimer;
 	var codestream;
 	var codepad;
 
@@ -109,9 +110,32 @@ var Codeworld = function() {
 		chat_box.scrollTop = chat_box.scrollHeight;
 	};
 
+	Codeworld.prototype.updateTypingStatus = function(data) {
+		if (data.status == 1) {
+			document.getElementById("typing_status").innerHTML =
+			data.codename + " is typing...";
+		} else {
+			document.getElementById("typing_status").innerHTML = "&nbsp;";
+		}
+	}
+
 	Codeworld.prototype.handleChatKeyPress = function(e) {
+		if (typingTimer != null) {
+			clearTimeout(typingTimer);
+		} else {
+			codestream.notifyTypingStatus(1);
+		}
+
+		typingTimer = setTimeout(function() {
+			codestream.notifyTypingStatus(0);
+			typingTimer = null;
+		}, 500);
+
 		if (e.keyCode == 13) {
 			that.sendComposedMessage();
+			clearTimeout(typingTimer);
+			typingTimer = null;
+			codestream.notifyTypingStatus(0);
 			return false;
 		}
 		return true;

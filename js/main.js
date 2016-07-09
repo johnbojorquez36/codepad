@@ -40,6 +40,7 @@ codestream.onevent("code_delta", codeworld.applyCodeDelta);
 codestream.onevent("group_info", Codeform.updateGroupInfo);
 codestream.onevent("join_group_response", handleJoinGroupResponse);
 codestream.onevent("chat_message", codeworld.receiveChatMessage);
+codestream.onevent("typing_status", codeworld.updateTypingStatus);
 
 function handleJoinGroupResponse(data) {
 	if (data.status == "codename_taken") {

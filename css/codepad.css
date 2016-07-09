@@ -50,6 +50,14 @@ div.chat_update {
 	color:grey;
 }
 
+#typing_status {
+	font-size:0.9em;
+	padding-top:3px;
+	padding-left: 6px;	
+	padding-bottom: 2px;	
+	color:grey;
+}
+
 .row.no-gutter {
   margin-left: 0;
   margin-right: 0;
@@ -112,7 +120,7 @@ div.chat_update {
 
 .myMarker {
   position:absolute;
-  background:rgba(102, 179, 255,0.3);
+  background:rgba(102, 179, 255, 0.2);
   z-index:20
 }
 

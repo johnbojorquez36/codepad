@@ -99,6 +99,17 @@ var Codestream = function(address) {
       }
    }
 
+   Codestream.prototype.notifyTypingStatus = function(status) {
+      ws.send(JSON.stringify({
+         event: "typing_status",
+         data: {
+            codename: codeworld.getCodename(),
+            codegroup: codeworld.getCodegroupName(),
+            status: status
+         }
+      }));
+   }
+
    Codestream.prototype.isStreaming = function() {
       return streaming;
    }
