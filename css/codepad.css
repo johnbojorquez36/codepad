@@ -12,20 +12,20 @@
 }
 
 #editor {
-	height: 70vh;
+	height: 68vh;
 	margin-top: 10px;
 	margin-left: 16px;
 	margin-right: 16px;
 }
 
 #coderlist {
-	height: 67vh;
+	height: 66vh;
 	padding-right: 4px;
     overflow-y: auto; 
 }
 
 #chat_box {
-	height:60vh;
+	height:58vh;
 	overflow-y: auto;
 	word-wrap: break-word;
 }
@@ -71,7 +71,8 @@ div.chat_update {
 
 .sub-tagline {
 	text-align: center;
-  	font-size: 3em;
+  	font-size: 2.5em;
+  	margin-top:10px;
   	text-shadow: #000 0px 2px 4px;
 }
 
@@ -103,6 +104,16 @@ div.chat_update {
 	#editor {
 		height: 35vh;
 	}
+
+	.sub-tagline {
+	  	font-size: 5vw;
+	}
+}
+
+.myMarker {
+  position:absolute;
+  background:rgba(102, 179, 255,0.3);
+  z-index:20
 }
 
 

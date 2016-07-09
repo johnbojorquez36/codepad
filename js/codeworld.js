@@ -4,6 +4,7 @@ var Codeworld = function() {
 	var codegroup_name;
 	var codegroup = new Set();
 	var activeTimers = new Map();
+	var markerMap = new Map();
 	var codestream;
 	var codepad;
 
@@ -54,19 +55,26 @@ var Codeworld = function() {
 	};
 
 	Codeworld.prototype.applyCodeDelta = function(data) {
+		var Range = ace.require('ace/range').Range;
+		var markerID;
+		var delta = data.delta;
     	codestream.appliedDeltas = true;
-    	codepad.getEditor().getSession().getDocument().applyDeltas([data.delta]);
+    	codepad.getEditor().getSession().getDocument().applyDeltas([delta]);
 
     	var currentTimer = activeTimers.get(data.codename);
     	if (currentTimer !=  null) {
     		clearTimeout(currentTimer);
+    		codepad.getEditor().session.removeMarker(markerMap.get(data.codename));
     	} else {
     		document.getElementById(data.codename).style.backgroundColor = "#80e5ff";
     	}
 
+    	markerMap.set(data.codename, codepad.getEditor().session.addMarker(new Range(delta.start.row, 0, delta.end.row, 1), "myMarker", "fullLine"));
+
     	activeTimers.set(data.codename, setTimeout(function() {
     		document.getElementById(data.codename).style.backgroundColor = "";
     		activeTimers.delete(data.codename);
+    		codepad.getEditor().session.removeMarker(markerMap.get(data.codename));
     	}, 1000));
 	};
 
