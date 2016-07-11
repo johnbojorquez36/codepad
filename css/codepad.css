@@ -59,14 +59,14 @@ div.chat_update {
 }
 
 .row.no-gutter {
-  margin-left: 0;
-  margin-right: 0;
+	margin-left: 0;
+	margin-right: 0;
 }
 
 .row.no-gutter [class*='col-']:not(:first-child),
 .row.no-gutter [class*='col-']:not(:last-child) {
-  padding-right: 0;
-  padding-left: 0;
+  	padding-right: 0;
+  	padding-left: 0;
 }
 
 .unselectable { 
@@ -87,7 +87,7 @@ div.chat_update {
 .footer {
 	text-align: center;
 	padding-top: 5px;
-  	position: absolute;
+  	position: fixed;
   	bottom: 0;
   	width: 100%;
   	height: 30px;
@@ -109,6 +109,17 @@ div.chat_update {
 	font-weight: bold;
 	margin-top: 10px;
 	margin-bottom: 10px;
+}
+
+.donate-form {
+	text-align: center;
+	margin-top: 20px;
+	margin-bottom: 50px;
+}
+
+.homepage-image {
+	margin-top: 100px;
+	margin-bottom: 50px;
 }
 
 @media only screen and (max-width: 992px) {

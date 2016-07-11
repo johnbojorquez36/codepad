@@ -1,6 +1,6 @@
 
 var codeworld = new Codeworld();
-var codestream = new Codestream("ws://localhost:8081/web-socket");
+var codestream = new Codestream("ws://codepad.us:8081/web-socket");
 var codepad = new Codepad("c_cpp", "emacs");
 codeworld.setCodestream(codestream);
 codeworld.setCodepad(codepad);
