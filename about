@@ -55,7 +55,7 @@
 		</form>
 	</div>
 
-	<footer class="footer">
+	<footer id="about-footer" class="footer">
       <div class="container">
       	Ideas or suggestions? Contact me at <a href="mailto:john.bojorquez@uconn.edu">john.bojorquez@uconn.edu</a>
       </div>

@@ -164,6 +164,11 @@ a.no-underline:hover {
 	}
 }
 
+@media only screen and (max-width: 550px) {
+	#about-footer {
+		height: 50px;
+	}
+}
 .myMarker {
   position:absolute;
   background:rgba(102, 179, 255, 0.2);
