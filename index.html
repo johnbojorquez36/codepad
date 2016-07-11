@@ -5,6 +5,7 @@
 	<title>codepad</title>
 	<link rel="stylesheet" type="text/css" href="css/codepad.css" />
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+	<link rel="icon" href="images/favicon.ico">
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
@@ -13,9 +14,11 @@
 	<div class="container-fluid">
 
 		<!-- HEADER -->
+		<a class="no-underline" href="index.html">
 		<div class="row codepad_header">
-			codepad <br />
+			codepad<br />
 		</div>
+		</a>
 		
 		<div id="codeform">
 			<!-- CODEPAD CREATE/JOIN FORM -->
@@ -24,11 +27,11 @@
 				<!-- CODE GROUP FORM -->
 				<div class="row form-group">
 					<label for="code_group" class="col-sm-5 control-label">code group:</label>
-					<div class="col-sm-2">
+					<div class="col-md-2 col-sm-3">
 						<input type="text" class="form-control" id="code_group" placeholder="Ex. mock41" oninput="Codeform.validateInput();getGroupInfo()">
 						<small class="text-muted">Create or join a codepad group</small>
 					</div>
-					<div class="col-sm-1">
+					<div class="col-sm-2">
 
 						<span id="codegroup_info" style="padding-top:6px;display:none">
 							<span class="glyphicon glyphicon-check" style="padding-top:12px;color:green" ></span> 
@@ -46,7 +49,7 @@
 				<!-- CODENAME FORM -->
 				<div class="row form-group">
 					<label for="code_name" class="col-sm-5 control-label">code name:</label>
-					<div class="col-sm-2">
+					<div class="col-md-2 col-sm-3">
 						<input type="text" class="form-control" id="code_name" placeholder="Ex. codeGod23" oninput="Codeform.validateInput()">
 					</div>
 					<div class="col-sm-1">
@@ -154,6 +157,13 @@
 			</div>
 		</div>
 	</div>
+
+	<footer id="codepad-footer" class="footer">
+      <div class="container">
+        <b><a href="about">about</a></b> - 
+        <b><a href="http://johnbojorquez.com">contact</a></b>
+      </div>
+    </footer>
 
 <script src="js/ace-min/ace.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" src="js/codeform.js"></script>

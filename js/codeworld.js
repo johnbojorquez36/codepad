@@ -37,7 +37,7 @@ var Codeworld = function() {
     	list.innerHTML = "";
     	codegroup.forEach(function (codename) {
     		list.innerHTML = list.innerHTML +
-    		"<div id=\"" + codename + "\" class=\"well well-sm\">" + data.codename + "</div>";
+    		"<div id=\"" + codename + "\" class=\"well well-sm\">" + codename + "</div>";
     	});
     	that.updateChat(data.codename + " left.");
 	};

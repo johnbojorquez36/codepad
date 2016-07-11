@@ -1,4 +1,5 @@
 (ns codeserver.core
+  (:gen-class)
   (:require [org.httpkit.server :as server]
             [clojure.data.json :as json]))
 
@@ -184,5 +185,4 @@
 
 (defn -main
   []
-  (.start (Thread. run-codepad-repl))
   (server/run-server ws-handler {:port 8081}))

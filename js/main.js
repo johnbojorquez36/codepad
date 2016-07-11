@@ -48,6 +48,7 @@ function handleJoinGroupResponse(data) {
 		Codeform.disableSubmit();
 	} else {
 		Codeform.hide();
+		document.getElementById("codepad-footer").style.display="none";
 		codeworld.setCodename(Codeform.getCodename());
 		codeworld.setCodegroupName(Codeform.getCodegroupName());
 		codeworld.applyDeltas(data.deltas);
