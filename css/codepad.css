@@ -135,6 +135,10 @@ div.chat_update {
 	#editor {
 		height: 50vh;
 	}
+
+	.homepage-image {
+		width: 70%;
+	}
 }
 
 a.no-underline:hover {
