@@ -27,7 +27,7 @@ var Codeworld = function() {
     	var list = document.getElementById("coderlist");
     	codegroup.add(data.codename);
     	list.innerHTML = list.innerHTML + 
-    	"<div id=\"" + data.codename + "\" class=\"well well-sm\">" + data.codename + "</div>";
+    	"<span id=\"" + data.codename + "\" class=\"well well-sm\">" + data.codename + "</span> ";
     	that.updateChat(data.codename + " joined.");
 	};
 
@@ -37,7 +37,7 @@ var Codeworld = function() {
     	list.innerHTML = "";
     	codegroup.forEach(function (codename) {
     		list.innerHTML = list.innerHTML +
-    		"<div id=\"" + codename + "\" class=\"well well-sm\">" + codename + "</div>";
+    		"<span id=\"" + codename + "\" class=\"well well-sm\">" + codename + "</span> ";
     	});
     	that.updateChat(data.codename + " left.");
 	};
@@ -51,7 +51,7 @@ var Codeworld = function() {
 		for (var i = 0; i < coders.length; ++i) {
 			codegroup.add(coders[i]);
 			list.innerHTML = list.innerHTML + 
-    		"<div id=\"" + coders[i] + "\" class=\"well well-sm\">" + coders[i] + "</div>";
+    		"<span id=\"" + coders[i] + "\" class=\"well well-sm\">" + coders[i] + "</span> ";
 		}
 	};
 

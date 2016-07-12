@@ -91,11 +91,15 @@
   				<div class="panel-body" id="codegroup_header" style="background-color: #d0e1e1"></div>
 			</div>
 
+			<div class="row">
+				<div class="col-xs-12" id="coderlist"></div>
+			</div>
+
 			<!-- CODEPAD/CODECHAT AREA -->
 			<div class="row" id="codepadarea">
 
 				<!-- CODEPAD COLUMN -->
-				<div class="col-md-6 col-sm-8">
+				<div class="col-sm-9">
 
 					<!-- CODEPAD OPTIONS ROW -->
 					<div class="row">
@@ -134,7 +138,7 @@
 					</div>
 				</div>
 
-				<div class="col-md-4 col-md-push-2 col-sm-4" style="padding-top: 10px">
+				<div class="col-sm-3" style="padding-top: 10px">
 					<div id="codechat" class="panel panel-primary">
 						<div class="panel-heading centered">codechat</div>
 						<div class="panel-body" id="chat_box">
@@ -143,10 +147,10 @@
 					</div>
 
 					<div class="row no-gutter">
-						<div class="col-md-11 col-sm-10 col-xs-11">
+						<div class="col-sm-10 col-xs-11">
 							<textarea class="form-control" rows="2" id="message_composition" style="resize:none" onkeydown="return codeworld.handleChatKeyPress(event)" placeholder="Write a message..."></textarea>
 						</div>
-						<div class="col-md-1 col-sm-2 col-xs-1">
+						<div class="col-sm-2 col-xs-1">
 							<div id="send_button" class="centered unselectable" onclick="codeworld.sendComposedMessage()">
 								<span class="glyphicon glyphicon-send" style="padding-top:8px"></span> <br />
 								<b>Send</b>
@@ -154,14 +158,8 @@
 						</div>
 					</div>
 				</div>
-
-				<div class="col-md-2 col-md-pull-4 col-sm-12 centered" style="padding-top: 0px;">
-					<h2>coders</h2>
-					<div id="coderlist">
-						
-					</div>
-				</div>
 			</div>
+			<br />
 		</div>
 	</div>
 

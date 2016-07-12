@@ -12,22 +12,22 @@
 }
 
 #editor {
-	height: 68vh;
+	height: 65vh;
 	margin-top: 10px;
 	margin-left: 16px;
 	margin-right: 16px;
 }
 
-#coderlist {
-	height: 66vh;
-	padding-right: 4px;
-    overflow-y: auto; 
-}
-
 #chat_box {
-	height:58vh;
+	height:54vh;
 	overflow-y: auto;
 	word-wrap: break-word;
+}
+
+#coderlist {
+	margin-top: -14px;
+	margin-bottom: 8px;
+	line-height: 300%;
 }
 
 #send_button {
@@ -84,6 +84,11 @@ div.chat_update {
   	text-shadow: #000 0px 2px 4px;
 }
 
+#codegroup_header {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
 .footer {
 	text-align: center;
 	padding-top: 5px;
@@ -117,24 +122,17 @@ div.chat_update {
 	margin-bottom: 50px;
 }
 
+span.well-sm {
+	margin-right: 2px;
+	margin-left: 2px;
+}
+
 .homepage-image {
 	margin-top: 100px;
 	margin-bottom: 50px;
 }
 
 @media only screen and (max-width: 992px) {
-
-	#send_button {
-   		font-size: 1.5vw;
-   }
-
-   	#chat_box {
-		height:40vh;
-	}
-
-	#editor {
-		height: 50vh;
-	}
 
 	.homepage-image {
 		width: 70%;
@@ -147,17 +145,13 @@ a.no-underline:hover {
 
 @media only screen and (max-width: 768px) {
 
+	#chat_box {
+		height: 30vh;
+	}
+
 	#send_button {
    		font-size: 2vw;
    }
-
-   	#chat_box {
-		height:20vh;
-	}
-
-	#editor {
-		height: 35vh;
-	}
 
 	.sub-tagline {
 	  	font-size: 5vw;
