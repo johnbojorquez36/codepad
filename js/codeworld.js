@@ -10,24 +10,24 @@ var Codeworld = function() {
 	var codepad;
 
 	Codeworld.prototype.show = function() {
-		document.getElementById("codepad").style.display = "inline";
+		document.getElementById("codeworld").style.display = "block";
 	}
 
 	Codeworld.prototype.hide = function() {
-		document.getElementById("codepad").style.display = "none";
+		document.getElementById("codeworld").style.display = "none";
 	}
 
 	Codeworld.prototype.updateChat = function(msg) {
-		var chat_box = document.getElementById("chat_box");
+		var chat_box = document.getElementById("chat-box");
 		chat_box.innerHTML = chat_box.innerHTML +
-		"<div class=\"chat_update\">" + msg + "</div>";
+		"<div class=\"chat-update\">" + msg + "</div>";
 	};
 
 	Codeworld.prototype.addCoder = function(data) {
     	var list = document.getElementById("coderlist");
     	codegroup.add(data.codename);
     	list.innerHTML = list.innerHTML + 
-    	"<span id=\"" + data.codename + "\" class=\"well well-sm\">" + data.codename + "</span> ";
+    	"<span id=\"" + data.codename + "\" class=\"well well-sm codetag\">" + data.codename + "</span> ";
     	that.updateChat(data.codename + " joined.");
 	};
 
@@ -37,13 +37,13 @@ var Codeworld = function() {
     	list.innerHTML = "";
     	codegroup.forEach(function (codename) {
     		list.innerHTML = list.innerHTML +
-    		"<span id=\"" + codename + "\" class=\"well well-sm\">" + codename + "</span> ";
+    		"<span id=\"" + codename + "\" class=\"well well-sm codetag\">" + codename + "</span> ";
     	});
     	that.updateChat(data.codename + " left.");
 	};
 
 	Codeworld.prototype.displayCodegroupName = function() {
-		document.getElementById("codegroup_header").innerHTML = codegroup_name;
+		document.getElementById("codegroup-header").innerHTML = codegroup_name;
 	}
 
 	Codeworld.prototype.addCoders = function(coders) {
@@ -51,7 +51,7 @@ var Codeworld = function() {
 		for (var i = 0; i < coders.length; ++i) {
 			codegroup.add(coders[i]);
 			list.innerHTML = list.innerHTML + 
-    		"<span id=\"" + coders[i] + "\" class=\"well well-sm\">" + coders[i] + "</span> ";
+    		"<span id=\"" + coders[i] + "\" class=\"well well-sm codetag\">" + coders[i] + "</span> ";
 		}
 	};
 
@@ -88,11 +88,11 @@ var Codeworld = function() {
 	};
 
 	Codeworld.prototype.sendComposedMessage = function() {
-		var message = htmlEncodeString(document.getElementById("message_composition").value);
-		document.getElementById("message_composition").value = "";
+		var message = htmlEncodeString(document.getElementById("message-composition").value);
+		document.getElementById("message-composition").value = "";
 
 		if (message != "") {
-			var chat_box = document.getElementById("chat_box");
+			var chat_box = document.getElementById("chat-box");
 			chat_box.innerHTML = chat_box.innerHTML +
 			"<b style=\"color:green\">" + codename +  "</b>: " + message + "<br />";
 			chat_box.scrollTop = chat_box.scrollHeight;
@@ -104,7 +104,7 @@ var Codeworld = function() {
 	Codeworld.prototype.receiveChatMessage = function(data) {
 		var sender = data.codename
 		var message = data.message;
-		var chat_box = document.getElementById("chat_box");
+		var chat_box = document.getElementById("chat-box");
 		chat_box.innerHTML = chat_box.innerHTML +
 		"<b>" + sender +  "</b>: " + message + "<br />";
 		chat_box.scrollTop = chat_box.scrollHeight;
@@ -112,10 +112,10 @@ var Codeworld = function() {
 
 	Codeworld.prototype.updateTypingStatus = function(data) {
 		if (data.status == 1) {
-			document.getElementById("typing_status").innerHTML =
+			document.getElementById("typing-status").innerHTML =
 			data.codename + " is typing...";
 		} else {
-			document.getElementById("typing_status").innerHTML = "&nbsp;";
+			document.getElementById("typing-status").innerHTML = "&nbsp;";
 		}
 	}
 

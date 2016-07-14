@@ -1,23 +1,32 @@
 var Codeform = Codeform || {
 	updateGroupInfo: function(data) {
-	    document.getElementById("codegroup_info").style.display = "inline";
-	    document.getElementById("num_coders").innerHTML = data.num_coders;
+	    document.getElementById("codegroup-info").style.visibility = "visible";
+	    var info = data.num_coders;
+	    if (data.num_coders == 1) {
+	    	info += " coder";
+	    } else {
+	    	info += " coders";
+	    }
+	    document.getElementById("codegroup-info").innerHTML = info + " in the group."
 	},
 
 	updateServerInfo: function(data) {
-		document.getElementById("server_info").innerHTML = "codegroups online: " + data.num_groups;
+		document.getElementById("server-status").innerHTML =
+       		"<b style='color:#B0DA4C'>Connected</b> to " + server_name;
+		document.getElementById("server-info").style.visibility = "visible";
+		document.getElementById("num-groups").innerHTML = data.num_groups;
 	},
 
 	hideGroupInfo: function(data) {
-		document.getElementById("codegroup_info").style.display = "none";
+		document.getElementById("codegroup-info").style.visibility = "hidden";
 	},
 
 	getCodegroupName: function() {
-		return htmlEncodeString(document.getElementById("code_group").value);
+		return htmlEncodeString(document.getElementById("codegroup-input").value);
 	},
 
 	getCodename: function() {
-		return htmlEncodeString(document.getElementById("code_name").value);
+		return htmlEncodeString(document.getElementById("codename-input").value);
 	},
 
 	hide: function() {
@@ -25,56 +34,44 @@ var Codeform = Codeform || {
 	},
 
 	show: function() {
-		document.getElementById("codeform").style.display = "inline";
+		document.getElementById("codeform").style.display = "block";
 	},
 
 	serverError: function() {
-		document.getElementById("codeform").style.display = "inline";
-      	document.getElementById("codepad").style.display = "none";
-      	document.getElementById("server_info").innerHTML =
-       		"codeserver unavailable. try again later.";
-       	document.getElementById("codegroup_info").style.display = "none"
-      	document.getElementById("join_button").disabled = true;
+		document.getElementById("codeform").style.display = "block";
+      	document.getElementById("codeworld").style.display = "none";
+      	document.getElementById("server-status").innerHTML =
+       		"Cannot establish connection with " + server_name + ". Try again later.";
+       		document.getElementById("server-info").style.visibility = "hidden";
+      	document.getElementById("join-button").disabled = true;
 	},
 
 	disableSubmit: function() {
-      	document.getElementById("join_button").disabled = true;
+      	document.getElementById("join-button").disabled = true;
 	},
 
 	displayCodenameError: function(msg) {
-		document.getElementById("codename_error").style.display = "inline";
-		document.getElementById("codename_error_msg").innerHTML = msg;
+		document.getElementById("codename-form").className += " has-error has-feedback";
+		var infoElem = document.getElementById("codename-info");
+		infoElem.style.color = "red";
+		infoElem.style.visibility = "visible";
+		infoElem.innerHTML = msg;
+	},
+
+	clearCodenameError: function() {
+		var codenameForm = document.getElementById("codename-form");
+		codenameForm.className = codenameForm.className.replace(/\bhas-error\b/, " ");
+		codenameForm.className = codenameForm.className.replace(/\bhas-feedback\b/, " ");
+		document.getElementById("codename-info").innerHTML = "&nbsp;";
 	},
 
 	displayCodegroupError: function(msg) {
-		document.getElementById("codegroup_error").style.display = "inline";
-		document.getElementById("codegroup_error_msg").innerHTML = msg;
-	},
-
-	checkCodegroupNameLength: function() {
-		return document.getElementById("code_group").value.length <= 22;
-	},
-
-	checkCodenameLength: function() {
-		return document.getElementById("code_name").value.length <= 26;
 	},
 
 	validateInput: function() {
-		if (!Codeform.checkCodegroupNameLength()) {
-			Codeform.displayCodegroupError("too long.");
-		} else {
-			document.getElementById("codegroup_error").style.display = "none";
-		}
-		if (!Codeform.checkCodenameLength()) {
-			Codeform.displayCodenameError("too long.");
-		} else {
-			document.getElementById("codename_error").style.display = "none";
-		}
-		document.getElementById("join_button").disabled = 
-			document.getElementById("code_group").value == "" 
-			|| !Codeform.checkCodegroupNameLength()
-			|| !Codeform.checkCodenameLength()
-			|| document.getElementById("code_name").value == ""
+		document.getElementById("join-button").disabled = 
+			document.getElementById("codegroup-input").value == "" 
+			|| document.getElementById("codename-input").value == ""
 			|| !codestream.isStreaming();
 	}	
 };

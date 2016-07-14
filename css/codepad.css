@@ -1,24 +1,57 @@
-.codepad_header {
-	background-color: #474e5d;
-	color: #ffffff;
+.code-font {
 	font-family: Monaco, Consolas, "Lucida Console", monospace;
+}
+
+.codepad-header {
+	background-color: #474e5d;
+	color: white;
 	font-size: 4em;
 	text-align: center;
 	padding: 20px 0px 20px 0px;
 }
 
-.centered {
-	text-align: center;
+a.no-decorarion:hover {
+    text-decoration: none;
+}
+
+#codeform {
+	margin-top: 100px;
+}
+
+#codegroup-info {
+	visibility: hidden;
+}
+
+#codename-info {
+	visibility: hidden;
+}
+
+#codeworld {
+	display: none;
+}
+
+.hidden {
+	display: none;
+}
+
+.glyphicon-check.green {
+	color: green;
+}
+
+.glyphicon-remove.red {
+	color: red;
 }
 
 #editor {
 	height: 65vh;
-	margin-top: 10px;
+	margin-top: 20px;
+	margin-bottom: 20px;
 	margin-left: 16px;
 	margin-right: 16px;
+	box-shadow: 0px 5px 15px 5px grey;
 }
 
-#chat_box {
+#chat-box {
 	height:54vh;
 	overflow-y: auto;
 	word-wrap: break-word;
@@ -30,16 +63,17 @@
 	line-height: 300%;
 }
 
-#send_button {
+#send-button {
 	font-size: 0.8vw;
 	margin-left: 5px;
+	padding-top: 8px;
 	background-color: #0099ff;
 	border-radius: 4px;
 	height:54px;
 	box-shadow: 0 2px 6px 1px grey
 }
 
-#send_button:hover {
+#send-button:hover {
 	background-color: #004d80;
 	cursor:pointer;
 }
@@ -56,6 +90,10 @@ div.chat_update {
 	padding-left: 6px;	
 	padding-bottom: 2px;	
 	color:grey;
+}
+
+#message-composition {
+	resize: none;
 }
 
 .row.no-gutter {
@@ -75,6 +113,10 @@ div.chat_update {
 	-moz-user-select: none; 
 	-o-user-select: none; 
 	user-select: none; 
+}
+
+#server-info {
+	visibility: hidden;
 }
 
 .sub-tagline {
@@ -104,44 +146,51 @@ div.chat_update {
 	text-decoration: underline;
 }
 
-.well.about-answer {
+#num-groups, #num-coders {
+	color: #944dff;
+}
+
+.well.code-box-green {
 	background: #272822;
 	color: #B0DA4C;
 	font-family: Monaco, Consolas, "Lucida Console", monospace;
 }
 
-.about-question {
-	font-weight: bold;
-	margin-top: 10px;
-	margin-bottom: 10px;
+.well.code-box-blue {
+	background: #272822;
+	color: #5EDBF4;
+	font-family: Monaco, Consolas, "Lucida Console", monospace;
 }
 
 .donate-form {
-	text-align: center;
+	text-align: center; 
 	margin-top: 20px;
 	margin-bottom: 50px;
 }
 
-span.well-sm {
+.codetag {
 	margin-right: 2px;
 	margin-left: 2px;
+	font-family: Monaco, Consolas, "Lucida Console", monospace;
 }
 
-.homepage-image {
+img.shadowed {
+	box-shadow: 0px 0px 15px grey
+}
+
+#homepage-image {
 	margin-top: 100px;
 	margin-bottom: 50px;
 }
 
 @media only screen and (max-width: 992px) {
 
-	.homepage-image {
+	#homepage-image {
 		width: 70%;
 	}
 }
 
-a.no-underline:hover {
-    text-decoration: none;
-}
+
 
 @media only screen and (max-width: 768px) {
 
@@ -149,7 +198,7 @@ a.no-underline:hover {
 		height: 30vh;
 	}
 
-	#send_button {
+	#send-button {
    		font-size: 2vw;
    }
 

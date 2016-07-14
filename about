@@ -14,8 +14,8 @@
 	<div class="container-fluid">
 
 		<!-- HEADER -->
-		<a class="no-underline" href="home">
-		<div class="row codepad_header">
+		<a class="no-decorarion" href="home">
+		<div class="row codepad-header">
 			codepad<br />
 		</div>
 		</a>
@@ -23,21 +23,21 @@
 		<div class="row" style="margin-top:30px;">
 		<div class="col-sm-3"></div>
 		<div class="col-sm-6">
-			<div class="centered">
+			<div class="text-center">
 				<img src="images/note-icon.png" />
 			</div>
 			<div class="about-question">What is codepad?</div>
-			<div class="well about-answer">
+			<div class="well code-box-green">
 				Codepad is an educational and professional tool for teaching, learning, and recruiting. Codepad allows students and programmers to collaborate in a realtime environment.
 			</div>
 
 			<div class="about-question">Why did I make this?</div>
-			<div class="well about-answer">
+			<div class="well code-box-green">
 				As someone who loves to help others excel in the field of CS, I often find it difficult to adequately teach others concepts of programming without actually working with them in person. A simple online tool like this is something that I've always needed. This was also a great opportunity to learn how to use WebSockets and gain experience in writing a server app in a newly learned language.
 			</div>
 
 			<div class="about-question">How does it work?</div>
-			<div class="well about-answer">
+			<div class="well code-box-green">
 				The frontend webpage was written with HTML, CSS (Bootstrap framework), and Vanilla JavaScript. The text editor was created using the Ace Editor framework. I'm using the WebSocket protocol to communicate with a server application which I wrote in Clojure.
 			</div>
 		</div>

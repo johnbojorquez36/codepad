@@ -13,94 +13,81 @@
 </head>
 
 <body>
-
 	<div class="container-fluid">
 
 		<!-- HEADER -->
-		<a class="no-underline" href="home">
-		<div class="row codepad_header">
-			codepad<br />
-		</div>
+		<a class="no-decorarion" href="home">
+			<div class="row codepad-header code-font">
+				codepad
+			</div>
 		</a>
 		
+		<!-- CODEFORM SECTION -->
 		<div id="codeform">
-			<!-- CODEPAD CREATE/JOIN FORM -->
-			<form class="form-horizontal" style="margin-top:100px">
+			<div class="row">
 
-				<!-- CODE GROUP FORM -->
-				<div class="row form-group">
-					<label for="code_group" class="col-sm-5 control-label">code group:</label>
-					<div class="col-md-2 col-sm-3">
-						<input type="text" class="form-control" id="code_group" placeholder="Ex. mock41" oninput="Codeform.validateInput();getGroupInfo()">
-						<small class="text-muted">Create or join a codepad group</small>
+				<div class="col-lg-4 col-xs-1"></div>
+
+				<form class="col-lg-4 col-xs-10 form-horizontal">
+
+					<!-- CODE GROUP FORM GROUP -->
+					<div class="form-group">
+						<label for="codegroup-input">code-group</label>
+						<input type="text" class="form-control" id="codegroup-input" placeholder="Ex. mock-group" maxlength="24">
+						<small id="codegroup-info" class="text-muted">&nbsp;</small>
 					</div>
-					<div class="col-sm-2">
 
-						<span id="codegroup_info" style="padding-top:6px;display:none">
-							<span class="glyphicon glyphicon-check" style="padding-top:12px;color:green" ></span> 
-							coders: <span id="num_coders">0</span>
-						</span>
-
-						<span id="codegroup_error" style="padding-top:6px;display:none">
-							<span class="glyphicon glyphicon-remove" style="padding-top:12px;color:red" ></span> 
-							<span id="codegroup_error_msg"></span>
-						</span>
+					<!-- CODENAME FORM GROUP -->
+					<div class="form-group" id="codename-form">
+						<label for="codename-input">code-name</label>
+						<input type="text" class="form-control" id="codename-input" placeholder="Ex. code-master" maxlength="24">
+						<small id="codename-info" class="text-muted">&nbsp;</small>
 					</div>
-					<div class="col-sm-4"> </div>
-				</div>
 
-				<!-- CODENAME FORM -->
-				<div class="row form-group">
-					<label for="code_name" class="col-sm-5 control-label">code name:</label>
-					<div class="col-md-2 col-sm-3">
-						<input type="text" class="form-control" id="code_name" placeholder="Ex. codeGod23" oninput="Codeform.validateInput()">
+					<!-- CREATE/JOIN BUTTON -->
+					<div class="text-center">
+						<button id="join-button" type="button" class="btn btn-primary btn-l" disabled>Create Group</button>
 					</div>
-					<div class="col-sm-2">
 
-						<span id="codename_error" style="padding-top:6px;display:none">
-							<span class="glyphicon glyphicon-remove" style="padding-top:12px;color:red" ></span> 
-							<span id="codename_error_msg"></span>
-						</span>
+					<br />
+
+					<!-- SERVER INFO -->
+					<div class="row well code-box-blue">
+							<div id="server-status" class="text-left">Establishing connection with the server...</div>
+							<div class="text-left" id="server-info">
+								<b>Codegroups</b> online: <span id="num-groups">0</span> <br />
+								<b>Coders</b> online: <span id="num-coders">0</span>
+							</div>
 					</div>
-					<div class="col-sm-4"> </div>
-				</div>
-			</form>
 
-			<!-- CREATE/JOIN BUTTON -->
-			<div class="row centered">
-				<button href="pad.html" id="join_button" type="button" class="btn btn-primary btn-l" disabled>Create / Join</button>
+				</form>
+
+				<div class="col-lg-4 col-xs-1"></div>
+
 			</div>
 
-			<br />
-
-			<!-- SERVER INFO -->
-			<div class="row centered" id="server_info">
-				codemonkeys are retrieving server info...
+			<div class="text-center">
+				<img class="shadowed" id="homepage-image" src="images/example-session.png"/>
 			</div>
-
-		<div class="centered">
-			<img class="homepage-image" src="images/example-session.png" style="box-shadow: 0px 0px 15px grey" />
 		</div>
-		</div>
+		<!-- END CODEFORM SECTION -->
 
-		<!-- CODEPAD -->
-		<div id="codepad" style="display: none">
+		<!-- CODEWORD SECTION -->
+		<div id="codeworld">
 
 			<!-- CODEGROUP HEADER -->
 			<div class="panel panel-default sub-tagline">
-  				<div class="panel-body" id="codegroup_header" style="background-color: #d0e1e1"></div>
+				<div class="panel-body" id="codegroup-header" style="background-color: #d0e1e1"></div>
 			</div>
 
+			<!-- LIST OF CODERS IN SESSION -->
 			<div class="row">
 				<div class="col-xs-12" id="coderlist"></div>
 			</div>
 
-			<!-- CODEPAD/CODECHAT AREA -->
-			<div class="row" id="codepadarea">
+			<div class="row">
 
-				<!-- CODEPAD COLUMN -->
 				<div class="col-sm-9">
-
 					<!-- CODEPAD OPTIONS ROW -->
 					<div class="row">
 
@@ -123,12 +110,13 @@
 							</select>
 						</div>
 
-						<div class="col-md-4 col-xs-0"> 
+						<!-- RESET CODEPAD -->
+						<div class="col-md-1 col-xs-2">
+							<button class="btn btn-primary pull-right" id="reset-button" value="Reset">
+							<span class="glyphicon glyphicon-refresh"></span>
 						</div>
 
-						<!-- RESET CODEPAD -->
-						<div class="col-xs-2" style="padding-left:5px">
-							<input class="btn btn-primary pull-right" type="button" value="Reset" onclick="codepad.clear()">
+						<div class="col-md-5 col-xs-0"> 
 						</div>
 					</div>
 
@@ -138,28 +126,29 @@
 					</div>
 				</div>
 
-				<div class="col-sm-3" style="padding-top: 10px">
+				<!-- CODECHAT -->
+				<div class="col-sm-3">
+					<!-- MESSAGE FEED -->
 					<div id="codechat" class="panel panel-primary">
-						<div class="panel-heading centered">codechat</div>
-						<div class="panel-body" id="chat_box">
-						</div>
-						<div id="typing_status">&nbsp;</div>
+						<div class="panel-heading text-center">codechat</div>
+						<div class="panel-body" id="chat-box"></div>
+						<div id="typing-status">&nbsp;</div>
 					</div>
 
+					<!-- MESSAGE COMPOSITION -->
 					<div class="row no-gutter">
 						<div class="col-sm-10 col-xs-11">
-							<textarea class="form-control" rows="2" id="message_composition" style="resize:none" onkeydown="return codeworld.handleChatKeyPress(event)" placeholder="Write a message..."></textarea>
+							<textarea class="form-control" rows="2" id="message-composition" placeholder="Write a message..."></textarea>
 						</div>
 						<div class="col-sm-2 col-xs-1">
-							<div id="send_button" class="centered unselectable" onclick="codeworld.sendComposedMessage()">
-								<span class="glyphicon glyphicon-send" style="padding-top:8px"></span> <br />
+							<div id="send-button" class="text-center unselectable">
+								<span class="glyphicon glyphicon-send"></span> <br />
 								<b>Send</b>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<br />
 		</div>
 	</div>
 
@@ -170,7 +159,7 @@
       </div>
     </footer>
 
-<script src="js/ace-min/ace.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="js/ace-min/ace.js" charset="utf-8"></script>
 <script type="text/javascript" src="js/codeform.js"></script>
 <script type="text/javascript" src="js/codeworld.js"></script>
 <script type="text/javascript" src="js/codestream.js"></script>
