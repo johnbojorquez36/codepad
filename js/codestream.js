@@ -20,9 +20,11 @@ var Codestream = function(address) {
       if (codemessage.event == "heartbeat") {
          missed_heartbeats = 0;
          streaming = true;
-      }else {
-      console.log(JSON.stringify(codemessage));}
-      callbacks.get(codemessage.event)(codemessage.data);
+      }
+
+      callbacks.get(codemessage.event).forEach(function (callback) {
+         callback(codemessage.data);
+      });
    };
 
    /********* PUBLIC MEMBER VARIABLES *********/
@@ -33,7 +35,9 @@ var Codestream = function(address) {
 
 
    Codestream.prototype.onevent = function(event_type, callback) {
-      callbacks.set(event_type, callback);
+      if (!callbacks.has(event_type)) callbacks.set(event_type, [callback]);
+      else callbacks.get(event_type).push(callback);
+      
    }
 
    Codestream.prototype.connect = function() {

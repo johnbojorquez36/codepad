@@ -22,18 +22,11 @@ var Codeworld = function(codestream) {
 		document.getElementById("codeworld").style.display = "none";
 	}
 
-	Codeworld.prototype.updateChat = function(msg) {
-		var chat_box = document.getElementById("chat-box");
-		chat_box.innerHTML = chat_box.innerHTML +
-		"<div class=\"chat-update\">" + msg + "</div>";
-	};
-
 	Codeworld.prototype.addCoder = function(data) {
     	var list = document.getElementById("coderlist");
     	codegroup.add(data.codename);
     	list.innerHTML = list.innerHTML + 
     	"<span id=\"" + data.codename + "\" class=\"well well-sm codetag\">" + data.codename + "</span> ";
-    	that.updateChat(data.codename + " joined.");
 	};
 
 	Codeworld.prototype.removeCoder = function(data) {
@@ -44,7 +37,6 @@ var Codeworld = function(codestream) {
     		list.innerHTML = list.innerHTML +
     		"<span id=\"" + codename + "\" class=\"well well-sm codetag\">" + codename + "</span> ";
     	});
-    	that.updateChat(data.codename + " left.");
 	};
 
 	Codeworld.prototype.displayCodegroupName = function() {
@@ -90,60 +82,6 @@ var Codeworld = function(codestream) {
     		codestream.appliedDeltas = true;
     		codepad.getEditor().getSession().getDocument().applyDeltas([deltas[i]]);
     	}
-	};
-
-	Codeworld.prototype.sendComposedMessage = function() {
-		var message = htmlEncodeString(document.getElementById("message-composition").value);
-		document.getElementById("message-composition").value = "";
-
-		if (message != "") {
-			var chat_box = document.getElementById("chat-box");
-			chat_box.innerHTML = chat_box.innerHTML +
-			"<b style=\"color:green\">" + codename +  "</b>: " + message + "<br />";
-			chat_box.scrollTop = chat_box.scrollHeight;
-		}
-
-		codestream.sendMessageToGroup(message);
-	};
-
-	Codeworld.prototype.receiveChatMessage = function(data) {
-		var sender = data.codename
-		var message = data.message;
-		var chat_box = document.getElementById("chat-box");
-		chat_box.innerHTML = chat_box.innerHTML +
-		"<b>" + sender +  "</b>: " + message + "<br />";
-		chat_box.scrollTop = chat_box.scrollHeight;
-	};
-
-	Codeworld.prototype.updateTypingStatus = function(data) {
-		if (data.status == 1) {
-			document.getElementById("typing-status").innerHTML =
-			data.codename + " is typing...";
-		} else {
-			document.getElementById("typing-status").innerHTML = "&nbsp;";
-		}
-	}
-
-	Codeworld.prototype.handleChatKeyPress = function(e) {
-		if (typingTimer != null) {
-			clearTimeout(typingTimer);
-		} else {
-			codestream.notifyTypingStatus(1);
-		}
-
-		typingTimer = setTimeout(function() {
-			codestream.notifyTypingStatus(0);
-			typingTimer = null;
-		}, 500);
-
-		if (e.keyCode == 13) {
-			that.sendComposedMessage();
-			clearTimeout(typingTimer);
-			typingTimer = null;
-			codestream.notifyTypingStatus(0);
-			return false;
-		}
-		return true;
 	};
 
 	Codeworld.prototype.setCodename = function(name) {
