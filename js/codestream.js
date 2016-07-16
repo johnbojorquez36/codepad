@@ -20,8 +20,8 @@ var Codestream = function(address) {
       if (codemessage.event == "heartbeat") {
          missed_heartbeats = 0;
          streaming = true;
-      }
-      
+      }else {
+      console.log(JSON.stringify(codemessage));}
       callbacks.get(codemessage.event)(codemessage.data);
    };
 
@@ -107,6 +107,13 @@ var Codestream = function(address) {
             codegroup: codeworld.getCodegroupName(),
             status: status
          }
+      }));
+   }
+
+   Codestream.prototype.send = function(event_type, data) {
+      ws.send(JSON.stringify({
+         event: event_type,
+         data: data
       }));
    }
 

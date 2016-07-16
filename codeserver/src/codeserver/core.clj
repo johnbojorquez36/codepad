@@ -72,7 +72,9 @@
   [channel]
   (server/send! channel (json/write-str {:event "heartbeat"
                                          :data {:num_groups
-                                                (count (deref code-groups))}})))
+                                                (count (deref code-groups))
+                                                :num_users
+                                                (count (deref channel-map))}})))
 
 (defn handle-join-group
   "Either joins a user with an existing group or creates a new one."

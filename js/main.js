@@ -1,13 +1,11 @@
 
 var server_name = "localhost"
-var codeworld = new Codeworld();
 var codestream = new Codestream("ws://" + server_name + ":8081/web-socket");
 var codepad = new Codepad("c_cpp", "emacs");
-codeworld.setCodestream(codestream);
+var codeworld = new Codeworld(codestream);
 codeworld.setCodepad(codepad);
 codestream.connect();
 var infoUpdate = null;
-
 
 
 codepad.getEditor().on("change", function(e) {codestream.notifyDelta(e);});
@@ -21,11 +19,8 @@ document.getElementById("codegroup-input").oninput = function () {
 
 document.getElementById("reset-button").onclick = function() {codepad.clear()};
 
-document.getElementById("message-composition").onkeydown = function (event) {
-	return codeworld.handleChatKeyPress(event);
-}
 
-document.getElementById("send-button").onclick = codeworld.sendComposedMessage;
+//document.getElementById("send-button").onclick = codeworld.sendComposedMessage;
 
 document.getElementById("codename-input").oninput = function () {
 	Codeform.clearCodenameError();
@@ -68,8 +63,6 @@ codestream.onevent("group_info", function(data) {
 	}
 });
 codestream.onevent("join_group_response", handleJoinGroupResponse);
-codestream.onevent("chat_message", codeworld.receiveChatMessage);
-codestream.onevent("typing_status", codeworld.updateTypingStatus);
 
 function handleJoinGroupResponse(data) {
 	if (data.status == "codename_taken") {

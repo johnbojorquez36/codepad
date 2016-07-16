@@ -78,13 +78,13 @@ a.no-decorarion:hover {
 	cursor:pointer;
 }
 
-div.chat_update {
+div.chat-update {
 	font-size:0.9em;
 	text-align: center;
 	color:grey;
 }
 
-#typing_status {
+#typing-status {
 	font-size:0.9em;
 	padding-top:3px;
 	padding-left: 6px;	

@@ -1,4 +1,4 @@
-var Codeworld = function() {
+var Codeworld = function(codestream) {
 	var that = this;
 	var codename;
 	var codegroup_name;
@@ -6,8 +6,13 @@ var Codeworld = function() {
 	var activeTimers = new Map();
 	var markerMap = new Map();
 	var typingTimer;
-	var codestream;
+	var codestream = codestream;
 	var codepad;
+	var codechat = new Codechat(codestream);
+
+	codechat.onmessagecomposed = function(message) {
+		codechat.send(codename, codegroup_name, message);
+	}
 
 	Codeworld.prototype.show = function() {
 		document.getElementById("codeworld").style.display = "block";

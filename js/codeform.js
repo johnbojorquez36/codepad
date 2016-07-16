@@ -15,6 +15,7 @@ var Codeform = Codeform || {
        		"<b style='color:#B0DA4C'>Connected</b> to " + server_name;
 		document.getElementById("server-info").style.visibility = "visible";
 		document.getElementById("num-groups").innerHTML = data.num_groups;
+		document.getElementById("num-coders").innerHTML = data.num_users;
 	},
 
 	hideGroupInfo: function(data) {
