@@ -43,15 +43,6 @@ var Codeworld = function(codestream) {
 		document.getElementById("codegroup-header").innerHTML = codegroup_name;
 	}
 
-	Codeworld.prototype.addCoders = function(coders) {
-		var list = document.getElementById("coderlist");
-		for (var i = 0; i < coders.length; ++i) {
-			codegroup.add(coders[i]);
-			list.innerHTML = list.innerHTML + 
-    		"<span id=\"" + coders[i] + "\" class=\"well well-sm codetag\">" + coders[i] + "</span> ";
-		}
-	};
-
 	Codeworld.prototype.applyCodeDelta = function(data) {
 		var Range = ace.require('ace/range').Range;
 		var markerID;

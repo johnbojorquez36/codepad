@@ -74,7 +74,9 @@ function handleJoinGroupResponse(data) {
 		codeworld.applyDeltas(data.deltas);
 		codeworld.show();
 		codeworld.displayCodegroupName();
-		codeworld.addCoders(data.users);
+		data.users.forEach(function(codename) {
+			codeworld.addCoder(codename);
+		});
 
 		if (infoUpdate != null) {
 			clearInterval(infoUpdate);
