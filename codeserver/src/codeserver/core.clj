@@ -94,13 +94,13 @@
     (cond (and group-atom ((deref group-atom) codename))
           (server/send! channel (json/write-str {:event "join_group_response"
                                                  :data {:status "codename_taken"}}))
-          (and group-atom (> (count (deref group-atom)) 16))
+          (and group-atom (>= (count (deref group-atom)) 16))
           (server/send! channel (json/write-str {:event "join_group_response"
                                                  :data {:status "codegroup_full"}}))
-          (or (clojure.string/blank? codename) (> (count codename) 16))
+          (or (clojure.string/blank? codename) (> (count codename) 24))
           (server/send! channel (json/write-str {:event "join_group_response"
                                                  :data {:status "codename_invalid"}}))
-          (or (clojure.string/blank? codegroup) (> (count codegroup) 16))
+          (or (clojure.string/blank? codegroup) (> (count codegroup) 24))
           (server/send! channel (json/write-str {:event "join_group_response"
                                                  :data {:status "codegroup_invalid"}}))
           :else (do (swap! channel-map assoc channel [codename codegroup])
@@ -184,33 +184,6 @@
   (server/with-channel request channel
     (server/on-close channel #(handle-close %1 channel))
     (server/on-receive channel #(handle-event %1 channel))))
-
-(defn print-groups
-  []
-  (defn print-group
-    [group]
-    (print (str (first group) ": "))
-    (loop [coders (deref (first (second group)))]
-      (if (not (empty? coders))
-        (do (print (str (first (first coders)) ", "))
-            (recur (rest coders)))))
-    (println "\b\b "))
-  (loop [groups (deref code-groups)]
-    (if (not (empty? groups))
-      (do (print-group (first groups))
-          (recur (rest groups))))))
-
-(defn run-codepad-repl
-  []
-  (print "admin@codepad.com:~$ ")
-  (flush)
-  (let [ln (read-line)]
-    (cond (= ln "groups") (print-groups)
-          (= ln "numusers") (println (count (deref channel-map)))
-          (= ln "q") (System/exit 0)
-          :else (println "command not recognized")))
-  (run-codepad-repl))
-
 
 (defn -main
   []
