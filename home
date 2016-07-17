@@ -31,7 +31,7 @@
 				<form class="col-lg-4 col-xs-10 form-horizontal">
 
 					<!-- CODE GROUP FORM GROUP -->
-					<div class="form-group">
+					<div class="form-group" id="codegroup-form">
 						<label for="codegroup-input">code-group</label>
 						<input type="text" class="form-control" id="codegroup-input" placeholder="Ex. mock-group" maxlength="24">
 						<small id="codegroup-info" class="text-muted">&nbsp;</small>
@@ -161,6 +161,7 @@
 
 <script type="text/javascript" src="js/ace-min/ace.js" charset="utf-8"></script>
 <script type="text/javascript" src="js/codeform.js"></script>
+<script type="text/javascript" src="js/codechat.js"></script>
 <script type="text/javascript" src="js/codeworld.js"></script>
 <script type="text/javascript" src="js/codestream.js"></script>
 <script type="text/javascript" src="js/codepad.js"></script>

@@ -54,6 +54,15 @@
     (server/send! channel (json/write-str {:event "typing_status"
                                          :data {:codename codename
                                                 :status status}}))))
+
+(defn notify-lang-change
+  "Notifies a channel a change in language"
+  [codename lang channel]
+  (if (not (= (first ((deref channel-map) channel)) codename))
+    (server/send! channel (json/write-str {:event "lang_change"
+                                           :data {:codename codename
+                                                  :lang lang}}))))
+
 (defn notify-group
   "Applies a notification function to each channel in the group"
   [codegroup notify]
@@ -85,20 +94,23 @@
     (cond (and group-atom ((deref group-atom) codename))
           (server/send! channel (json/write-str {:event "join_group_response"
                                                  :data {:status "codename_taken"}}))
-          (clojure.string/blank? codename)
+          (and group-atom (> (count (deref group-atom)) 16))
+          (server/send! channel (json/write-str {:event "join_group_response"
+                                                 :data {:status "codegroup_full"}}))
+          (or (clojure.string/blank? codename) (> (count codename) 16))
           (server/send! channel (json/write-str {:event "join_group_response"
                                                  :data {:status "codename_invalid"}}))
-          (clojure.string/blank? codegroup)
+          (or (clojure.string/blank? codegroup) (> (count codegroup) 16))
           (server/send! channel (json/write-str {:event "join_group_response"
                                                  :data {:status "codegroup_invalid"}}))
           :else (do (swap! channel-map assoc channel [codename codegroup])
-              (add-to-group codename channel codegroup)
-              (notify-group codegroup #(notify-join codename codegroup %1))
-              (server/send! channel (json/write-str {:event "join_group_response"
-                                                     :data {:status "ok"
-                                                            :users (get-codenames codegroup)
-                                                            :deltas (deref (second ((deref code-groups) codegroup)))}}))
-              (spit "event.log" (str channel " joined " codegroup " as " codename "\n") :append true)))))
+                    (add-to-group codename channel codegroup)
+                    (notify-group codegroup #(notify-join codename codegroup %1))
+                    (server/send! channel (json/write-str {:event "join_group_response"
+                                                           :data {:status "ok"
+                                                                  :users (get-codenames codegroup)
+                                                                  :deltas (deref (second ((deref code-groups) codegroup)))}}))
+                    (spit "event.log" (str channel " joined " codegroup " as " codename "\n") :append true)))))
 
 (defn handle-code-delta
   [data]
@@ -144,6 +156,13 @@
         status (data "status")]
     (notify-group codegroup #(notify-typing-status codename status %))))
 
+(defn handle-lang-change
+  [data channel]
+  (let [codename (data "codename")
+        codegroup (data "codegroup")
+        lang (data "lang")]
+    (notify-group codegroup #(notify-lang-change codename lang %))))
+
 (defn handle-event
   "Receives an event as a JSON string and sends to the corresponding handler."
   [event channel]
@@ -156,6 +175,7 @@
           (= event-type "group_info") (handle-group-info-request event-data channel)
           (= event-type "chat_message") (handle-chat-message event-data channel)
           (= event-type "typing_status") (handle-typing-status event-data channel)
+          (= event-type "lang_change") (handle-lang-change event-data channel)
           :else (println "unknown event received"))))
 
 (defn ws-handler

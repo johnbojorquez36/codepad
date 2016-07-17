@@ -30,6 +30,9 @@ function handleJoinGroupResponse(data) {
 	} else if (data.status == "codegroup_invalid") { 
 		codeform.displayCodegroupError("codegroup invalid");
 		codeform.disableSubmit();
+	} else if (data.status == "codegroup_full") { 
+		codeform.displayCodegroupError("codegroup is full");
+		codeform.disableSubmit();
 	} else {
 		codeform.hide();
 		document.getElementById("codepad-footer").style.display="none";

@@ -18,21 +18,38 @@ var Codeworld = function(codestream) {
 
 	/********* Event Listeners for the Codeworld *********/
 	document.getElementById("reset-button").onclick = function() {codepad.clear()};
+	document.getElementById("style-control").onchange = function() {
+		codepad.setStyle(document.getElementById("style-control").value);
+	};
+	document.getElementById("lang-control").onchange = function() {
+		var lang = document.getElementById("lang-control").value;
+		codestream.send("lang_change", {
+			codename: codename,
+			codegroup: codegroup_name, 
+			lang: lang
+		});
+		codepad.setLanguage(lang);
+	};
 	codepad.getEditor().on("change", function(e) {codestream.notifyDelta(e);});
 	codestream.onevent("code_delta",  function(data) {that.applyCodeDelta(data);});
 	codestream.onevent("user_joined", function(data) {that.addCoder(data.codename);});
 	codestream.onevent("user_left", function(data) {that.removeCoder(data.codename);});
+	codestream.onevent("lang_change", function(data) {
+		codechat.update(data.codename + " changed the language to " + data.lang + ".");
+		document.getElementById("lang-control").value = data.lang;
+		codepad.setLanguage(data.lang);
+	});
 	codechat.onmessagecomposed = function(message) {codechat.send(codename, codegroup_name, message);};
 
 	/********* Public Methods *********/
 
 	Codeworld.prototype.show = function() {
 		document.getElementById("codeworld").style.display = "block";
-	}
+	};
 
 	Codeworld.prototype.hide = function() {
 		document.getElementById("codeworld").style.display = "none";
-	}
+	};
 
 	Codeworld.prototype.addCoder = function(codename) {
     	codegroup.add(codename);
@@ -46,7 +63,7 @@ var Codeworld = function(codestream) {
 
 	Codeworld.prototype.displayCodegroupName = function() {
 		document.getElementById("codegroup-header").innerHTML = codegroup_name;
-	}
+	};
 
 	Codeworld.prototype.applyCodeDelta = function(data) {
 		var delta = data.delta;
@@ -117,4 +134,4 @@ var Codeworld = function(codestream) {
 	Codeworld.prototype.getCodegroupName = function(name) {
 		return codegroup_name;
 	};
-}
+};
