@@ -52,7 +52,7 @@ a.no-decorarion:hover {
 }
 
 #chat-box {
-	height:54vh;
+	height:56vh;
 	overflow-y: auto;
 	word-wrap: break-word;
 }
