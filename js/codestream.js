@@ -4,7 +4,7 @@ var heartbeat_msg = JSON.stringify({event: "heartbeat"});
 var Codestream = function(address) {
    var self = this;
 
-   /********* PRIVATE MEMBER VARIABLES **********/
+   /********* Private Member Variables *********/
 
    var ws;
    var address = address;
@@ -27,18 +27,18 @@ var Codestream = function(address) {
       });
    };
 
-   /********* PUBLIC MEMBER VARIABLES *********/
+   /********* Public Member Variables *********/
 
    this.appliedDeltas = false;
 
-   /********* PUBLIC METHODS *********/
+   /********* Public Methods *********/
 
 
    Codestream.prototype.onevent = function(event_type, callback) {
       if (!callbacks.has(event_type)) callbacks.set(event_type, [callback]);
       else callbacks.get(event_type).push(callback);
       
-   }
+   };
 
    Codestream.prototype.connect = function() {
       ws = new WebSocket(address);
@@ -46,17 +46,17 @@ var Codestream = function(address) {
       ws.onopen = onopen;
       ws.onerror = onerror;
       ws.onmessage = onmessage;
-   }
+   };
 
    Codestream.prototype.disconnect = function() {
       ws.onclose = function() {};
       ws.close();
-   }
+   };
 
    Codestream.prototype.setErrorCallback = function(error_func) {
       onerror = error_func;
       ws.onerror = error_func;
-   }
+   };
 
    Codestream.prototype.requestToJoinGroup = function(codename, codegroup) {
       ws.send(JSON.stringify({
@@ -66,7 +66,7 @@ var Codestream = function(address) {
             codegroup: codegroup
          }
       }));
-   }
+   };
 
    Codestream.prototype.requestGroupInfo = function(codegroup) {
       ws.send(JSON.stringify({
@@ -75,18 +75,7 @@ var Codestream = function(address) {
             codegroup: codegroup
          }
       }));
-   }
-
-   Codestream.prototype.sendMessageToGroup = function(message) {
-      ws.send(JSON.stringify({
-            event: "chat_message",
-            data: {
-               codename: codeworld.getCodename(),
-               codegroup: codeworld.getCodegroupName(),
-               message: message
-            }
-      }));
-   }
+   };
 
    Codestream.prototype.notifyDelta = function(delta) {
       if (!this.appliedDeltas) {
@@ -101,7 +90,7 @@ var Codestream = function(address) {
       } else {
          this.appliedDeltas = false;
       }
-   }
+   };
 
    Codestream.prototype.notifyTypingStatus = function(status) {
       ws.send(JSON.stringify({
@@ -112,20 +101,20 @@ var Codestream = function(address) {
             status: status
          }
       }));
-   }
+   };
 
    Codestream.prototype.send = function(event_type, data) {
       ws.send(JSON.stringify({
          event: event_type,
          data: data
       }));
-   }
+   };
 
    Codestream.prototype.isStreaming = function() {
       return streaming;
-   }
+   };
 
-   /********* PRIVATE METHODS *********/
+    /********* Private Methods *********/
 
    function startStreaming() {
       heartbeat = setInterval(function() {
@@ -143,5 +132,5 @@ var Codestream = function(address) {
             ws.close();
        }
     }, 1000);
-   }
+   };
 };

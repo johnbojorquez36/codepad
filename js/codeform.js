@@ -1,78 +1,150 @@
-var Codeform = Codeform || {
-	updateGroupInfo: function(data) {
-	    document.getElementById("codegroup-info").style.visibility = "visible";
+/****************************************************************************
+ * Just a namespace of functions for controlling and modifying the 'Codeform'
+ * displayed on the homepage. 
+ ****************************************************************************/
+
+var Codeform = function(codestream) {
+	var that = this;
+
+	/********* Codeform DOM Elements *********/
+	var form = document.getElementById("codeform");
+	var codegroup_input = document.getElementById("codegroup-input");
+	var codename_input = document.getElementById("codename-input");
+	var codegroup_info = document.getElementById("codegroup-info");
+	var server_status = document.getElementById("server-status");
+	var server_info = document.getElementById("server-info");
+	var num_groups = document.getElementById("num-groups");
+	var num_coders = document.getElementById("num-coders");
+	var world = document.getElementById("codeworld");
+	var join_button = document.getElementById("join-button");
+
+	/********* Private Member Variables *********/
+	var infoUpdate = null;
+	var codestream = codestream;
+
+	/********* Codeform Event Listeners *********/
+	codestream.onevent("group_info", function(data) {
+		if (data.num_coders > 0) {
+			that.updateGroupInfo(data);
+			join_button.innerHTML = "Join Group";
+		} else {
+			join_button.innerHTML = "Create Group";
+		}
+	});
+
+	codegroup_input.oninput = function () {
+		that.clearCodenameError();
+		that.validateInput();
+		getGroupInfo();
+	};
+
+	codename_input.oninput = function () {
+		that.clearCodenameError();
+		that.validateInput();
+	};
+	join_button.onclick = function() {
+		var codename = that.getCodename();
+		var codegroup = that.getCodegroupName();
+		codestream.requestToJoinGroup(codename, codegroup);
+	};
+
+	/********* Public Methods *********/
+	Codeform.prototype.hide = function() {
+		form.style.display = "none";
+	};
+
+	Codeform.prototype.show = function() {
+		form.style.display = "block";
+	};
+
+	Codeform.prototype.updateGroupInfo = function(data) {
+	    codegroup_info.style.visibility = "visible";
 	    var info = data.num_coders;
 	    if (data.num_coders == 1) {
 	    	info += " coder";
 	    } else {
 	    	info += " coders";
 	    }
-	    document.getElementById("codegroup-info").innerHTML = info + " in the group."
-	},
+	    codegroup_info.innerHTML = info + " in the group."
+	};
 
-	updateServerInfo: function(data) {
-		document.getElementById("server-status").innerHTML =
+	Codeform.prototype.updateServerInfo = function(data) {
+		server_status.innerHTML =
        		"<b style='color:#B0DA4C'>Connected</b> to " + server_name;
-		document.getElementById("server-info").style.visibility = "visible";
-		document.getElementById("num-groups").innerHTML = data.num_groups;
-		document.getElementById("num-coders").innerHTML = data.num_users;
-	},
+		server_info.style.visibility = "visible";
+		num_groups.innerHTML = data.num_groups;
+		num_coders.innerHTML = data.num_users;
+	};
 
-	hideGroupInfo: function(data) {
-		document.getElementById("codegroup-info").style.visibility = "hidden";
-	},
+	Codeform.prototype.hideGroupInfo = function(data) {
+		codegroup_info.style.visibility = "hidden";
+	};
 
-	getCodegroupName: function() {
-		return htmlEncodeString(document.getElementById("codegroup-input").value);
-	},
+	Codeform.prototype.getCodegroupName = function() {
+		return htmlEncodeString(codegroup_input.value);
+	};
 
-	getCodename: function() {
-		return htmlEncodeString(document.getElementById("codename-input").value);
-	},
+	Codeform.prototype.getCodename = function() {
+		return htmlEncodeString(codename_input.value);
+	};
 
-	hide: function() {
-		document.getElementById("codeform").style.display = "none";
-	},
-
-	show: function() {
-		document.getElementById("codeform").style.display = "block";
-	},
-
-	serverError: function() {
-		document.getElementById("codeform").style.display = "block";
-      	document.getElementById("codeworld").style.display = "none";
-      	document.getElementById("server-status").innerHTML =
+	Codeform.prototype.serverError = function() {
+      	server_status.innerHTML =
        		"Cannot establish connection with " + server_name + ". Try again later.";
-       		document.getElementById("server-info").style.visibility = "hidden";
-      	document.getElementById("join-button").disabled = true;
-	},
+       		server_info.style.visibility = "hidden";
+      	join_button.disabled = true;
+	};
 
-	disableSubmit: function() {
-      	document.getElementById("join-button").disabled = true;
-	},
+	Codeform.prototype.disableSubmit = function() {
+      	join_button.disabled = true;
+	};
 
-	displayCodenameError: function(msg) {
+	Codeform.prototype.displayCodenameError = function(msg) {
 		document.getElementById("codename-form").className += " has-error has-feedback";
-		var infoElem = document.getElementById("codename-info");
-		infoElem.style.color = "red";
-		infoElem.style.visibility = "visible";
-		infoElem.innerHTML = msg;
-	},
+		codename_info.style.color = "red";
+		codename_info.style.visibility = "visible";
+		codename_info.innerHTML = msg;
+	};
 
-	clearCodenameError: function() {
+	Codeform.prototype.clearCodenameError = function() {
 		var codenameForm = document.getElementById("codename-form");
 		codenameForm.className = codenameForm.className.replace(/\bhas-error\b/, " ");
 		codenameForm.className = codenameForm.className.replace(/\bhas-feedback\b/, " ");
 		document.getElementById("codename-info").innerHTML = "&nbsp;";
 	},
 
-	displayCodegroupError: function(msg) {
-	},
+	Codeform.prototype.displayCodegroupError = function(msg) {
+	};
 
-	validateInput: function() {
+	Codeform.prototype.validateInput = function() {
 		document.getElementById("join-button").disabled = 
 			document.getElementById("codegroup-input").value == "" 
 			|| document.getElementById("codename-input").value == ""
 			|| !codestream.isStreaming();
-	}	
+	};
+
+	Codeform.prototype.disableGroupInfoRequest = function() {
+		if (infoUpdate != null) {
+			clearInterval(infoUpdate);
+			infoUpdate = null;
+		}
+	}
+
+	function getGroupInfo() {
+		if (codestream.isStreaming()) {
+			var code_group_field = document.getElementById("codegroup-input");
+			that.hideGroupInfo();
+
+			if (infoUpdate != null) {
+				clearInterval(infoUpdate);
+				infoUpdate = null;
+			}
+
+			if (code_group_field.value != "") {
+				infoUpdate = setInterval(function() {
+					codestream.requestGroupInfo(code_group_field.value);
+				}, 500);
+			}
+		}
+	};
 };

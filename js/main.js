@@ -1,76 +1,34 @@
+"use strict";
 
+/* Initialize the codestream for communicating with the server  */
 var server_name = "localhost"
 var codestream = new Codestream("ws://" + server_name + ":8081/web-socket");
-var codepad = new Codepad("c_cpp", "emacs");
+
+/* Initialize the 'Codeform' for user input */
+var codeform = new Codeform(codestream);
+
+/* Initialize the 'Codeworld' */
 var codeworld = new Codeworld(codestream);
-codeworld.setCodepad(codepad);
+codestream.onevent("heartbeat", codeform.updateServerInfo);
 codestream.connect();
-var infoUpdate = null;
-
-
-codepad.getEditor().on("change", function(e) {codestream.notifyDelta(e);});
-window.onload = Codeform.validateInput;
-
-document.getElementById("codegroup-input").oninput = function () {
-	Codeform.clearCodenameError();
-	Codeform.validateInput();
-	getGroupInfo();
-}
-
-document.getElementById("reset-button").onclick = function() {codepad.clear()};
-
-
-//document.getElementById("send-button").onclick = codeworld.sendComposedMessage;
-
-document.getElementById("codename-input").oninput = function () {
-	Codeform.clearCodenameError();
-	Codeform.validateInput();
-}
-
-function getGroupInfo() {
-	if (codestream.isStreaming()) {
-		var code_group_field = document.getElementById("codegroup-input");
-		Codeform.hideGroupInfo();
-
-		if (infoUpdate != null) {
-			clearInterval(infoUpdate);
-			infoUpdate = null;
-		}
-
-		if (code_group_field.value != "") {
-			infoUpdate = setInterval(function() {
-				codestream.requestGroupInfo(code_group_field.value);
-			}, 500);
-		}
-	}
-};
-
+window.onload = codeform.validateInput;
 codestream.setErrorCallback(function() {
 	codeworld.hide();
-	Codeform.serverError();
+	codeform.show();
+	codeform.serverError();
 });
 
-codestream.onevent("heartbeat", Codeform.updateServerInfo);
-codestream.onevent("code_delta", codeworld.applyCodeDelta);
-codestream.onevent("group_info", function(data) {
-	if (data.num_coders > 0) {
-		Codeform.updateGroupInfo(data);
-		document.getElementById("join-button").innerHTML = "Join Group";
-	} else {
-		document.getElementById("join-button").innerHTML = "Create Group";
-	}
-});
 codestream.onevent("join_group_response", handleJoinGroupResponse);
 
 function handleJoinGroupResponse(data) {
 	if (data.status == "codename_taken") {
-		Codeform.displayCodenameError("codename taken");
-		Codeform.disableSubmit();
+		codeform.displayCodenameError("codename taken");
+		codeform.disableSubmit();
 	} else {
-		Codeform.hide();
+		codeform.hide();
 		document.getElementById("codepad-footer").style.display="none";
-		codeworld.setCodename(Codeform.getCodename());
-		codeworld.setCodegroupName(Codeform.getCodegroupName());
+		codeworld.setCodename(codeform.getCodename());
+		codeworld.setCodegroupName(codeform.getCodegroupName());
 		codeworld.applyDeltas(data.deltas);
 		codeworld.show();
 		codeworld.displayCodegroupName();
@@ -78,17 +36,8 @@ function handleJoinGroupResponse(data) {
 			codeworld.addCoder(codename);
 		});
 
-		if (infoUpdate != null) {
-			clearInterval(infoUpdate);
-			infoUpdate = null;
-		}
+		codeform.disableGroupInfoRequest();
 	}
-};
-
-document.getElementById("join-button").onclick = function() {
-		var codename = Codeform.getCodename();
-		var codegroup = Codeform.getCodegroupName();
-		codestream.requestToJoinGroup(codename, codegroup);
 };
 
 function htmlEncodeString(raw) {
@@ -96,6 +45,10 @@ function htmlEncodeString(raw) {
 		return '&#' + str.charCodeAt(0) + ';';
 	});
 }
+
+function sanitize(message) {
+	return htmlEncodeString(message.replace(/^\s+/, '').replace(/\s+$/, ''));
+};
 
 
 

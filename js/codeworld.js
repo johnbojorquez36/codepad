@@ -1,25 +1,30 @@
+/******************************************************************
+ * Represents the the collaboritive enviroment that users see after
+ * joining a group.
+ ******************************************************************/
+
 var Codeworld = function(codestream) {
 	var that = this;
+
+	/********* Private Member Variables *********/
 	var codename;
 	var codegroup_name;
 	var codegroup = new Set();
 	var activeTimers = new Map();
-	var markerMap = new Map();
 	var codestream = codestream;
-	var codepad;
+	var codepad = new Codepad("c_cpp", "emacs");
 	var codechat = new Codechat(codestream);
 	var coder_list = document.getElementById("coderlist");
 
-	codestream.onevent("user_joined", function(data) {
-		that.addCoder(data.codename);
-	});
-	codestream.onevent("user_left", function(data) {
-		that.removeCoder(data.codename);
-	});
+	/********* Event Listeners for the Codeworld *********/
+	document.getElementById("reset-button").onclick = function() {codepad.clear()};
+	codepad.getEditor().on("change", function(e) {codestream.notifyDelta(e);});
+	codestream.onevent("code_delta",  function(data) {that.applyCodeDelta(data);});
+	codestream.onevent("user_joined", function(data) {that.addCoder(data.codename);});
+	codestream.onevent("user_left", function(data) {that.removeCoder(data.codename);});
+	codechat.onmessagecomposed = function(message) {codechat.send(codename, codegroup_name, message);};
 
-	codechat.onmessagecomposed = function(message) {
-		codechat.send(codename, codegroup_name, message);
-	}
+	/********* Public Methods *********/
 
 	Codeworld.prototype.show = function() {
 		document.getElementById("codeworld").style.display = "block";
@@ -34,8 +39,8 @@ var Codeworld = function(codestream) {
     	that.addToCoderList(codename);
 	};
 
-	Codeworld.prototype.removeCoder = function(data) {
-    	codegroup.delete(data.codename);
+	Codeworld.prototype.removeCoder = function(codename) {
+    	codegroup.delete(codename);
     	that.removeFromCoderList(codename);
 	};
 
@@ -44,33 +49,30 @@ var Codeworld = function(codestream) {
 	}
 
 	Codeworld.prototype.applyCodeDelta = function(data) {
-		var Range = ace.require('ace/range').Range;
-		var markerID;
 		var delta = data.delta;
     	codestream.appliedDeltas = true;
-    	codepad.getEditor().getSession().getDocument().applyDeltas([delta]);
+    	codepad.applyDeltas([delta]);
 
     	var currentTimer = activeTimers.get(data.codename);
     	if (currentTimer !=  null) {
     		clearTimeout(currentTimer);
-    		codepad.getEditor().session.removeMarker(markerMap.get(data.codename));
+    		codepad.removeCodingMarker(data.codename);
     	} else {
     		document.getElementById(data.codename).style.backgroundColor = "#80e5ff";
     	}
 
-    	var row = delta.end.row;
-    	markerMap.set(data.codename, codepad.getEditor().session.addMarker(new Range(row, 0, row, 1), "myMarker", "fullLine"));
+    	codepad.setCodingMarker(data.codename, delta.end.row);
 
     	activeTimers.set(data.codename, setTimeout(function() {
     		document.getElementById(data.codename).style.backgroundColor = "";
     		activeTimers.delete(data.codename);
-    		codepad.getEditor().session.removeMarker(markerMap.get(data.codename));
+    		codepad.removeCodingMarker(data.codename);
     	}, 500));
 	};
 
 	Codeworld.prototype.applyDeltas = function(deltas) {
     	for (var i = 0; i < deltas.length; ++i) {
-    		codestream.appliedDeltas = true;
+    		codestream.appliedDeltas = true;	// Make sure the 'change' event doesn't get processed
     		codepad.getEditor().getSession().getDocument().applyDeltas([deltas[i]]);
     	}
 	};

@@ -1,17 +1,24 @@
-"use strict";
+/*********************************************************
+ * Represents the text editor area that users can code in.
+ *********************************************************/
 
 var Codepad = function(lang, style) {
-	// Holds the text editor object
-	this.editor = ace.edit("editor");
+	var that = this;
+
+	/********* Private Member Variables *********/
+	var editor = ace.edit("editor");
+	var markerMap = new Map();
 
 	// Initialize the editor
-	this.editor.setTheme("ace/theme/monokai");
-	this.editor.setKeyboardHandler("ace/keyboard/" + style);
-	this.editor.getSession().setMode("ace/mode/" + lang);
-	this.editor.setOptions({
+	editor.setTheme("ace/theme/monokai");
+	editor.setKeyboardHandler("ace/keyboard/" + style);
+	editor.getSession().setMode("ace/mode/" + lang);
+	editor.setOptions({
 		fontFamily: "monospace",
 		fontSize: "12pt"
 	});
+
+	/********* Public Methods *********/
 
 	Codepad.prototype.setLanguage = function(lang) {
 		var lang_mode;
@@ -21,26 +28,38 @@ var Codepad = function(lang, style) {
 		else if (lang == "Python") lang_mode = "python";
 		else if (lang == "JavaScript") lang_mode = "javascript";
 		else lang_mode = "plain_text";
-		this.editor.getSession().setMode("ace/mode/" + lang_mode);
-	}
-	
+		editor.getSession().setMode("ace/mode/" + lang_mode);
+	};	
 
 	Codepad.prototype.setStyle = function(style) {
 		var handler;
 		if (style == "Emacs") handler = "emacs";
 		else if (style == "Vim") handler = "vim";
-		this.editor.setKeyboardHandler("ace/keyboard/" + handler);
-	}
+		editor.setKeyboardHandler("ace/keyboard/" + handler);
+	};
+
+	Codepad.prototype.setCodingMarker = function(codename, row) {
+		var Range = ace.require('ace/range').Range;
+		markerMap.set(codename, editor.session.addMarker(new Range(row, 0, row, 1), "coding-marker", "fullLine"));
+	};
+
+	Codepad.prototype.removeCodingMarker = function(codename) {
+		editor.session.removeMarker(markerMap.get(codename));
+	};
+
+	Codepad.prototype.applyDeltas = function(deltas) {
+		editor.getSession().getDocument().applyDeltas(deltas);
+	};
 
 	Codepad.prototype.clear = function() {
-		this.editor.setValue("");
-	}
+		editor.setValue("");
+	};
 
 	Codepad.prototype.getCode = function() {
-		return this.editor.getValue();
-	}
+		return editor.getValue();
+	};
 
 	Codepad.prototype.getEditor = function() {
-		return this.editor;
-	}
+		return editor;
+	};
 };

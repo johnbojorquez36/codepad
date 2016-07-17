@@ -212,7 +212,7 @@ img.shadowed {
 		height: 50px;
 	}
 }
-.myMarker {
+.coding-marker {
   position:absolute;
   background:rgba(102, 179, 255, 0.2);
   z-index:20
