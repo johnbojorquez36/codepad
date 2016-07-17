@@ -12,4 +12,5 @@ A simple online tool for conducting programming interviews.
     * ~~No more javascript in html~~
   * ~~Change both character limits to 16~~
   * ~~Check that the codename/group is not all spaces~~
-  * Limit for how many people in a session
+  * ~~Limit for how many people in a session~~
+  * Each coder is assigned a color
