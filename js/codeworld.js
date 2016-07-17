@@ -5,10 +5,17 @@ var Codeworld = function(codestream) {
 	var codegroup = new Set();
 	var activeTimers = new Map();
 	var markerMap = new Map();
-	var typingTimer;
 	var codestream = codestream;
 	var codepad;
 	var codechat = new Codechat(codestream);
+	var coder_list = document.getElementById("coderlist");
+
+	codestream.onevent("user_joined", function(data) {
+		that.addCoder(data.codename);
+	});
+	codestream.onevent("user_left", function(data) {
+		that.removeCoder(data.codename);
+	});
 
 	codechat.onmessagecomposed = function(message) {
 		codechat.send(codename, codegroup_name, message);
@@ -22,21 +29,14 @@ var Codeworld = function(codestream) {
 		document.getElementById("codeworld").style.display = "none";
 	}
 
-	Codeworld.prototype.addCoder = function(data) {
-    	var list = document.getElementById("coderlist");
-    	codegroup.add(data.codename);
-    	list.innerHTML = list.innerHTML + 
-    	"<span id=\"" + data.codename + "\" class=\"well well-sm codetag\">" + data.codename + "</span> ";
+	Codeworld.prototype.addCoder = function(codename) {
+    	codegroup.add(codename);
+    	that.addToCoderList(codename);
 	};
 
 	Codeworld.prototype.removeCoder = function(data) {
     	codegroup.delete(data.codename);
-    	var list = document.getElementById("coderlist");
-    	list.innerHTML = "";
-    	codegroup.forEach(function (codename) {
-    		list.innerHTML = list.innerHTML +
-    		"<span id=\"" + codename + "\" class=\"well well-sm codetag\">" + codename + "</span> ";
-    	});
+    	that.removeFromCoderList(codename);
 	};
 
 	Codeworld.prototype.displayCodegroupName = function() {
@@ -82,6 +82,15 @@ var Codeworld = function(codestream) {
     		codestream.appliedDeltas = true;
     		codepad.getEditor().getSession().getDocument().applyDeltas([deltas[i]]);
     	}
+	};
+
+	Codeworld.prototype.addToCoderList = function(codename) {
+		coder_list.innerHTML += "<span id='" + codename + 
+			"' class='well well-sm codetag'>" + codename + "</span> ";
+	};
+
+	Codeworld.prototype.removeFromCoderList = function(codename) {
+		coder_list.removeChild(document.getElementById(codename));
 	};
 
 	Codeworld.prototype.setCodename = function(name) {

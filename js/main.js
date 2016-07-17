@@ -51,8 +51,6 @@ codestream.setErrorCallback(function() {
 });
 
 codestream.onevent("heartbeat", Codeform.updateServerInfo);
-codestream.onevent("user_joined", codeworld.addCoder);
-codestream.onevent("user_left", codeworld.removeCoder);
 codestream.onevent("code_delta", codeworld.applyCodeDelta);
 codestream.onevent("group_info", function(data) {
 	if (data.num_coders > 0) {
