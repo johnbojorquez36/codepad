@@ -24,6 +24,12 @@ function handleJoinGroupResponse(data) {
 	if (data.status == "codename_taken") {
 		codeform.displayCodenameError("codename taken");
 		codeform.disableSubmit();
+	} else if (data.status == "codename_invalid") {
+		codeform.displayCodenameError("codename invalid");
+		codeform.disableSubmit();
+	} else if (data.status == "codegroup_invalid") { 
+		codeform.displayCodegroupError("codegroup invalid");
+		codeform.disableSubmit();
 	} else {
 		codeform.hide();
 		document.getElementById("codepad-footer").style.display="none";

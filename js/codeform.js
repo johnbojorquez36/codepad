@@ -10,6 +10,7 @@ var Codeform = function(codestream) {
 	var form = document.getElementById("codeform");
 	var codegroup_input = document.getElementById("codegroup-input");
 	var codename_input = document.getElementById("codename-input");
+	var codename_info = document.getElementById("codename-info");
 	var codegroup_info = document.getElementById("codegroup-info");
 	var server_status = document.getElementById("server-status");
 	var server_info = document.getElementById("server-info");
@@ -34,6 +35,7 @@ var Codeform = function(codestream) {
 
 	codegroup_input.oninput = function () {
 		that.clearCodenameError();
+		that.clearCodegroupError();
 		that.validateInput();
 		getGroupInfo();
 	};
@@ -106,14 +108,25 @@ var Codeform = function(codestream) {
 		codename_info.innerHTML = msg;
 	};
 
+	Codeform.prototype.displayCodegroupError = function(msg) {
+		document.getElementById("codegroup-form").className += " has-error has-feedback";
+		codegroup_info.style.color = "red";
+		codegroup_info.style.visibility = "visible";
+		codegroup_info.innerHTML = msg;
+	};
+
 	Codeform.prototype.clearCodenameError = function() {
 		var codenameForm = document.getElementById("codename-form");
 		codenameForm.className = codenameForm.className.replace(/\bhas-error\b/, " ");
 		codenameForm.className = codenameForm.className.replace(/\bhas-feedback\b/, " ");
 		document.getElementById("codename-info").innerHTML = "&nbsp;";
-	},
+	};
 
-	Codeform.prototype.displayCodegroupError = function(msg) {
+	Codeform.prototype.clearCodegroupError = function() {
+		var codenameForm = document.getElementById("codegroup-form");
+		codenameForm.className = codenameForm.className.replace(/\bhas-error\b/, " ");
+		codenameForm.className = codenameForm.className.replace(/\bhas-feedback\b/, " ");
+		document.getElementById("codegroup-info").innerHTML = "&nbsp;";
 	};
 
 	Codeform.prototype.validateInput = function() {

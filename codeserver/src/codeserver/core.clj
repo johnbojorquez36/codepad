@@ -82,16 +82,23 @@
   (let [codename (data "codename")
         codegroup (data "codegroup")
         group-atom (first ((deref code-groups) codegroup))]
-    (if (and group-atom ((deref group-atom) codename))
-      (server/send! channel (json/write-str {:event "join_group_response"
-                                             :data {:status "codename_taken"}}))
-      (do (swap! channel-map assoc channel [codename codegroup])
-          (add-to-group codename channel codegroup)
-          (notify-group codegroup #(notify-join codename codegroup %1))
+    (cond (and group-atom ((deref group-atom) codename))
           (server/send! channel (json/write-str {:event "join_group_response"
-                                                 :data {:status "ok"
-                                                        :users (get-codenames codegroup)
-                                                        :deltas (deref (second ((deref code-groups) codegroup)))}}))))))
+                                                 :data {:status "codename_taken"}}))
+          (clojure.string/blank? codename)
+          (server/send! channel (json/write-str {:event "join_group_response"
+                                                 :data {:status "codename_invalid"}}))
+          (clojure.string/blank? codegroup)
+          (server/send! channel (json/write-str {:event "join_group_response"
+                                                 :data {:status "codegroup_invalid"}}))
+          :else (do (swap! channel-map assoc channel [codename codegroup])
+              (add-to-group codename channel codegroup)
+              (notify-group codegroup #(notify-join codename codegroup %1))
+              (server/send! channel (json/write-str {:event "join_group_response"
+                                                     :data {:status "ok"
+                                                            :users (get-codenames codegroup)
+                                                            :deltas (deref (second ((deref code-groups) codegroup)))}}))
+              (spit "event.log" (str channel " joined " codegroup " as " codename "\n") :append true)))))
 
 (defn handle-code-delta
   [data]
