@@ -5,6 +5,7 @@
 
 (def code-groups (atom {}))
 (def channel-map (atom {}))
+(def rev-number (atom 0))
 
 (defn notify-join
   "Notifies a channel that a user has joined the same group"
@@ -118,7 +119,8 @@
         codegroup (data "codegroup")
         delta (data "delta")]
     (do (swap! (second ((deref code-groups) codegroup)) conj delta)
-        (notify-group codegroup #(notify-delta codename delta %)))))
+        (notify-group codegroup #(notify-delta codename delta %))
+        (swap! rev-number + 1))))
 
 (defn handle-group-info-request
   [data channel]
