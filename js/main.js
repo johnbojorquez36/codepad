@@ -1,7 +1,7 @@
 "use strict";
 
 /* Initialize the codestream for communicating with the server  */
-var server_name = "localhost"
+var server_name = "codepad.us"
 var codestream = new Codestream("ws://" + server_name + ":8081/web-socket");
 
 /* Initialize the 'Codeform' for user input */

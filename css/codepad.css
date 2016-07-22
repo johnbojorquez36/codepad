@@ -188,6 +188,10 @@ img.shadowed {
 	#homepage-image {
 		width: 70%;
 	}
+
+	#send-button {
+   		font-size: 1.5vw;
+   }
 }
 
 

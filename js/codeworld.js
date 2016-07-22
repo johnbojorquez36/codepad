@@ -14,6 +14,7 @@ var Codeworld = function(codestream) {
 	var codestream = codestream;
 	var codepad = new Codepad("c_cpp", "emacs");
 	var codechat = new Codechat(codestream);
+	var last_delta_time;
 	var coder_list = document.getElementById("coderlist");
 
 	/********* Event Listeners for the Codeworld *********/

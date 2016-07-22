@@ -87,7 +87,7 @@
 
 			<div class="row">
 
-				<div class="col-sm-9">
+				<div class="col-md-9 col-sm-8">
 					<!-- CODEPAD OPTIONS ROW -->
 					<div class="row">
 
@@ -127,7 +127,7 @@
 				</div>
 
 				<!-- CODECHAT -->
-				<div class="col-sm-3">
+				<div class="col-md-3 col-sm-4">
 					<!-- MESSAGE FEED -->
 					<div id="codechat" class="panel panel-primary">
 						<div class="panel-heading text-center">codechat</div>

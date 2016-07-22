@@ -1,6 +1,7 @@
 /****************************************************************************
- * Just a namespace of functions for controlling and modifying the 'Codeform'
- * displayed on the homepage. 
+ * Represents the form the user is presented with on the home page. Supports
+ * directly modifying and updating the form's components as a result of 
+ * information sent from the server.
  ****************************************************************************/
 
 var Codeform = function(codestream) {
@@ -83,11 +84,11 @@ var Codeform = function(codestream) {
 	};
 
 	Codeform.prototype.getCodegroupName = function() {
-		return htmlEncodeString(codegroup_input.value);
+		return sanitize(codegroup_input.value);
 	};
 
 	Codeform.prototype.getCodename = function() {
-		return htmlEncodeString(codename_input.value);
+		return sanitize(codename_input.value);
 	};
 
 	Codeform.prototype.serverError = function() {
@@ -155,7 +156,7 @@ var Codeform = function(codestream) {
 
 			if (code_group_field.value != "") {
 				infoUpdate = setInterval(function() {
-					codestream.requestGroupInfo(code_group_field.value);
+					codestream.requestGroupInfo(sanitize(code_group_field.value));
 				}, 500);
 			}
 		}
