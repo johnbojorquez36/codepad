@@ -75,7 +75,7 @@
   "Acknowledges a client at the other end of the channel for a particular event."
   [event-type channel]
   (server/send! channel (json/write-str {:event "ack"
-                                         :data {:ack-event
+                                         :data {:ack_event
                                                 event-type}})))
 
 (defn add-to-group
