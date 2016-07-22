@@ -5,7 +5,6 @@
 
 (def code-groups (atom {}))
 (def channel-map (atom {}))
-(def rev-number (atom 0))
 
 (defn notify-join
   "Notifies a channel that a user has joined the same group"
@@ -72,6 +71,13 @@
       (do (notify (second (first group)))
           (recur (rest group))))))
 
+(defn acknowledge
+  "Acknowledges a client at the other end of the channel for a particular event."
+  [event-type channel]
+  (server/send! channel (json/write-str {:event "ack"
+                                         :data {:ack-event
+                                                event-type}})))
+
 (defn add-to-group
   [codename channel codegroup]
   (if (first ((deref code-groups) codegroup))
@@ -114,13 +120,13 @@
                     (spit "event.log" (str channel " joined " codegroup " as " codename "\n") :append true)))))
 
 (defn handle-code-delta
-  [data]
+  [data channel]
   (let [codename (data "codename")
         codegroup (data "codegroup")
         delta (data "delta")]
     (do (swap! (second ((deref code-groups) codegroup)) conj delta)
         (notify-group codegroup #(notify-delta codename delta %))
-        (swap! rev-number + 1))))
+        (acknowledge "delta" channel))))
 
 (defn handle-group-info-request
   [data channel]
@@ -173,7 +179,7 @@
         event-data (event-obj "data")]
     (cond (= event-type "join_group") (handle-join-group event-data channel)
           (= event-type "heartbeat") (send-heartbeat channel)
-          (= event-type "code_delta") (handle-code-delta event-data)
+          (= event-type "code_delta") (handle-code-delta event-data channel)
           (= event-type "group_info") (handle-group-info-request event-data channel)
           (= event-type "chat_message") (handle-chat-message event-data channel)
           (= event-type "typing_status") (handle-typing-status event-data channel)
