@@ -15,7 +15,7 @@
 
 		<!-- HEADER -->
 		<a class="no-decorarion" href="http://codepad.us">
-		<div class="row codepad-header">
+		<div class="row codepad-header code-font">
 			codepad<br />
 		</div>
 		</a>
