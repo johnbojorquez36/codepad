@@ -143,19 +143,22 @@ var Codeform = function(codestream) {
 	}
 
 	function getGroupInfo() {
-		if (codestream.isStreaming()) {
-			that.hideGroupInfo();
+		that.hideGroupInfo();
 
-			if (infoUpdate != null) {
-				clearInterval(infoUpdate);
-				infoUpdate = null;
-			}
+		if (infoUpdate != null) {
+			clearInterval(infoUpdate);
+			infoUpdate = null;
+		}
 
-			if (codegroup_input.value != "") {
-				infoUpdate = setInterval(function() {
+		if (codegroup_input.value != "") {
+			infoUpdate = setInterval(function() {
+				if (codestream.isStreaming()) {
 					codestream.requestGroupInfo(codegroup_input.value);
-				}, 500);
-			}
+				} else {
+					clearInterval(infoUpdate);
+					infoUpdate = null;
+				}
+			}, 500);
 		}
 	};
 };
