@@ -46,7 +46,7 @@ var Codechat = function(codestream) {
 			typingTimer = null;
 		}, 500);
 		
-		var message = sanitize(composition.value);
+		var message = composition.value.trim();
 		if (e.keyCode == 13 && message != "") {
 			that.onmessagecomposed(message);
 		}
@@ -54,7 +54,7 @@ var Codechat = function(codestream) {
 	};
 
 	send_button.onclick = function(e) {
-		var message = sanitize(composition.value);
+		var message = composition.value.trim();
 		if (message != "") {
 			that.onmessagecomposed(message);
 		}
@@ -63,18 +63,18 @@ var Codechat = function(codestream) {
 	/********* Public Methods *********/
 
 	Codechat.prototype.update = function(upd) {
-		chat_box.innerHTML += "<div class='chat-update'>" + upd + "</div>";
+		chat_box.innerHTML += "<div class='chat-update'>" + sanitize(upd) + "</div>";
 	};
 
 	Codechat.prototype.postSelf = function(codename, msg) {
-		chat_box.innerHTML += "<b style='color:green'>" + codename +
-		  "</b>: " + msg + "<br />";
+		chat_box.innerHTML += "<b style='color:green'>" + sanitize(codename) +
+		  "</b>: " + sanitize(msg) + "<br />";
 		chat_box.scrollTop = chat_box.scrollHeight;
 	};
 
 	Codechat.prototype.postOther = function(codename, msg) {
-		chat_box.innerHTML += "<b>" + codename +
-		  "</b>: " + msg + "<br />";
+		chat_box.innerHTML += "<b>" + sanitize(codename) +
+		  "</b>: " + sanitize(msg) + "<br />";
 		chat_box.scrollTop = chat_box.scrollHeight;
 
 	};
@@ -97,7 +97,7 @@ var Codechat = function(codestream) {
 
 	function updateTypingStatus(codename, status) {
 		if (status == 1) {
-			typing_status.innerHTML = codename + " is typing...";
+			typing_status.innerHTML = sanitize(codename) + " is typing...";
 		} else {
 			typing_status.innerHTML = "&nbsp;";
 		}

@@ -56,7 +56,7 @@ function htmlEncodeString(raw) {
 }
 
 function sanitize(message) {
-	return htmlEncodeString(message.replace(/^\s+/, '').replace(/\s+$/, ''));
+	return htmlEncodeString(message.trim());
 };
 
 

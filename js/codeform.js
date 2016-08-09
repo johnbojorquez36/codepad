@@ -9,6 +9,8 @@ var Codeform = function(codestream) {
 
 	/********* Codeform DOM Elements *********/
 	var form = document.getElementById("codeform");
+	var codename_form = document.getElementById("codename-form");
+	var codegroup_form = document.getElementById("codegroup-form");
 	var codegroup_input = document.getElementById("codegroup-input");
 	var codename_input = document.getElementById("codename-input");
 	var codename_info = document.getElementById("codename-info");
@@ -84,11 +86,11 @@ var Codeform = function(codestream) {
 	};
 
 	Codeform.prototype.getCodegroupName = function() {
-		return sanitize(codegroup_input.value);
+		return codegroup_input.value;
 	};
 
 	Codeform.prototype.getCodename = function() {
-		return sanitize(codename_input.value);
+		return codename_input.value;
 	};
 
 	Codeform.prototype.serverError = function() {
@@ -103,38 +105,34 @@ var Codeform = function(codestream) {
 	};
 
 	Codeform.prototype.displayCodenameError = function(msg) {
-		document.getElementById("codename-form").className += " has-error has-feedback";
+		codename_form.className += " has-error has-feedback";
 		codename_info.style.color = "red";
 		codename_info.style.visibility = "visible";
 		codename_info.innerHTML = msg;
 	};
 
 	Codeform.prototype.displayCodegroupError = function(msg) {
-		document.getElementById("codegroup-form").className += " has-error has-feedback";
+		codegroup_form.className += " has-error has-feedback";
 		codegroup_info.style.color = "red";
 		codegroup_info.style.visibility = "visible";
 		codegroup_info.innerHTML = msg;
 	};
 
 	Codeform.prototype.clearCodenameError = function() {
-		var codenameForm = document.getElementById("codename-form");
-		codenameForm.className = codenameForm.className.replace(/\bhas-error\b/, " ");
-		codenameForm.className = codenameForm.className.replace(/\bhas-feedback\b/, " ");
-		document.getElementById("codename-info").innerHTML = "&nbsp;";
+		codegroup_form.className = codegroup_form.className.replace(/\bhas-error\b/, " ");
+		codegroup_form.className = codegroup_form.className.replace(/\bhas-feedback\b/, " ");
+		codename_info.innerHTML = "&nbsp;";
 	};
 
 	Codeform.prototype.clearCodegroupError = function() {
-		var codenameForm = document.getElementById("codegroup-form");
-		codenameForm.className = codenameForm.className.replace(/\bhas-error\b/, " ");
-		codenameForm.className = codenameForm.className.replace(/\bhas-feedback\b/, " ");
-		document.getElementById("codegroup-info").innerHTML = "&nbsp;";
+		codegroup_form.className = codegroup_form.className.replace(/\bhas-error\b/, " ");
+		codegroup_form.className = codegroup_form.className.replace(/\bhas-feedback\b/, " ");
+		codegroup_info.innerHTML = "&nbsp;";
 	};
 
 	Codeform.prototype.validateInput = function() {
-		document.getElementById("join-button").disabled = 
-			document.getElementById("codegroup-input").value == "" 
-			|| document.getElementById("codename-input").value == ""
-			|| !codestream.isStreaming();
+		join_button.disabled = 
+			codegroup_input.value == "" || codename_input.value == "" || !codestream.isStreaming();
 	};
 
 	Codeform.prototype.disableGroupInfoRequest = function() {
@@ -146,7 +144,6 @@ var Codeform = function(codestream) {
 
 	function getGroupInfo() {
 		if (codestream.isStreaming()) {
-			var code_group_field = document.getElementById("codegroup-input");
 			that.hideGroupInfo();
 
 			if (infoUpdate != null) {
@@ -154,9 +151,9 @@ var Codeform = function(codestream) {
 				infoUpdate = null;
 			}
 
-			if (code_group_field.value != "") {
+			if (codegroup_input.value != "") {
 				infoUpdate = setInterval(function() {
-					codestream.requestGroupInfo(sanitize(code_group_field.value));
+					codestream.requestGroupInfo(codegroup_input.value);
 				}, 500);
 			}
 		}

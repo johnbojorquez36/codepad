@@ -63,7 +63,7 @@ var Codeworld = function(codestream) {
 	};
 
 	Codeworld.prototype.displayCodegroupName = function() {
-		document.getElementById("codegroup-header").innerHTML = codegroup_name;
+		document.getElementById("codegroup-header").innerHTML = sanitize(codegroup_name);
 	};
 
 	Codeworld.prototype.applyCodeDelta = function(data) {
@@ -96,8 +96,8 @@ var Codeworld = function(codestream) {
 	};
 
 	Codeworld.prototype.addToCoderList = function(codename) {
-		coder_list.innerHTML += "<span id='" + codename + 
-			"' class='well well-sm codetag'>" + codename + "</span> ";
+		coder_list.innerHTML += "<span id='" + sanitize(codename) + 
+			"' class='well well-sm codetag'>" + sanitize(codename) + "</span> ";
 	};
 
 	Codeworld.prototype.removeFromCoderList = function(codename) {
