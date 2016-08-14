@@ -122,7 +122,7 @@
 (defn handle-code-delta
   [data channel]
   (let [codename (data "codename")
-        codegroup (data "codegroup")
+        codegroup (second ((deref channel-map) channel))
         delta (data "delta")]
     (do (swap! (second ((deref code-groups) codegroup)) conj delta)
         (notify-group codegroup #(notify-delta codename delta %))
@@ -140,7 +140,7 @@
 (defn handle-chat-message
   [data channel]
   (let [codename (data "codename")
-        codegroup (data "codegroup")
+        codegroup (second ((deref channel-map) channel))
         message (data "message")]
     (notify-group codegroup #(notify-chat-message codename message %))))
 
@@ -160,14 +160,14 @@
 (defn handle-typing-status
   [data channel]
   (let [codename (data "codename")
-        codegroup (data "codegroup")
+        codegroup (second ((deref channel-map) channel))
         status (data "status")]
     (notify-group codegroup #(notify-typing-status codename status %))))
 
 (defn handle-lang-change
   [data channel]
   (let [codename (data "codename")
-        codegroup (data "codegroup")
+        codegroup (second ((deref channel-map) channel))
         lang (data "lang")]
     (notify-group codegroup #(notify-lang-change codename lang %))))
 
