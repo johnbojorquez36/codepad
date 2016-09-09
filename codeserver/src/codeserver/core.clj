@@ -6,6 +6,8 @@
 (def code-groups (atom {}))
 (def channel-map (atom {}))
 
+(defn now [] (new java.util.Date))
+
 (defn notify-join
   "Notifies a channel that a user has joined the same group"
   [codename codegroup channel]
@@ -117,7 +119,7 @@
                                                            :data {:status "ok"
                                                                   :users (get-codenames codegroup)
                                                                   :deltas (deref (second ((deref code-groups) codegroup)))}}))
-                    (spit "event.log" (str channel " joined " codegroup " as " codename "\n") :append true)))))
+                    (spit "event.log" (str (now) ": " channel " joined " codegroup " as " codename "\n") :append true)))))
 
 (defn handle-code-delta
   [data channel]
