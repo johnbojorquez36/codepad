@@ -1,16 +1,18 @@
+<img src="http://codepad.us/images/note-icon.png" align="right" width="20%"/>
 # codepad
-A simple online tool for conducting programming interviews.
 
-## TODO:
-  * ~~Add functionality to send messages through server~~
-  * ~~Highlight codename when coder is coding~~
-  * ~~Add "is typing..." when typing a message~~
-  * ~~Make page mobile responsive~~
-  * ~~Add ability to show user's cursor/where they are typing~~
-  * ~~Dynamically change Create/Join button from Create to Join if group exists~~
-  * ~~Refactor teh code~~
-    * ~~No more javascript in html~~
-  * ~~Change both character limits to 16~~
-  * ~~Check that the codename/group is not all spaces~~
-  * ~~Limit for how many people in a session~~
-  * Each coder is assigned a color
+> A simple online tool for conducting programming interviews.
+
+<img src="http://i.imgur.com/jR7ztlb.png"/>
+
+## Build instructions:
+In the `codeserver` directory run:
+
+`lein compile`
+
+`lein uberjar`
+
+which will produce a standalone jar file for the server application.
+
+[logo]: http://codepad.us/images/note-icon.png "Logo Title Text 2"
+
