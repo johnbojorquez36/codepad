@@ -1,4 +1,4 @@
-<img src="http://codepad.us/images/note-icon.png" align="right" width="20%"/>
+<img src="http://codepad.us/images/note-icon.png" align="right" width="15%"/>
 # codepad
 
 > A simple online tool for conducting programming interviews.
