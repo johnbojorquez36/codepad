@@ -3,6 +3,8 @@
 
 > A simple online tool for conducting programming interviews.
 
+<br />
+
 <img src="http://i.imgur.com/jR7ztlb.png"/>
 
 ## Build instructions:
